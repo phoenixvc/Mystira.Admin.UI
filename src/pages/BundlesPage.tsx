@@ -97,15 +97,13 @@ function BundlesPage() {
                         <td>{bundle.version || "-"}</td>
                         <td>
                           <div className="btn-group btn-group-sm">
-                            <button
+                            <Link
+                              to={`/admin/bundles/import`}
                               className="btn btn-outline-primary"
-                              onClick={() => {
-                                // TODO: Implement view/edit
-                                showToast.info("View/Edit functionality coming soon");
-                              }}
+                              title="Bundles are file-based. Use import to update."
                             >
-                              <i className="bi bi-eye"></i> View
-                            </button>
+                              <i className="bi bi-upload"></i> Re-import
+                            </Link>
                             <button
                               className="btn btn-outline-danger"
                               onClick={() => handleDelete(bundle.id)}

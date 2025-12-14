@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { badgesApi } from "../api/badges";
+import { mediaApi } from "../api/media";
 import { showToast } from "../utils/toast";
 
 function ImportBadgePage() {
@@ -11,16 +12,20 @@ function ImportBadgePage() {
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => {
-      // TODO: Implement badge upload API endpoint
-      // For now, we'll need to check what the actual endpoint is
-      // This is a placeholder - may need to be adjusted based on actual API
+    mutationFn: async (file: File) => {
+      // First upload the image to media
+      const mediaAsset = await mediaApi.uploadMedia(file);
+      
+      // Then create a badge with the uploaded image ID
+      const badgeName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
       return badgesApi.createBadge({
-        name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+        name: badgeName,
+        imageId: mediaAsset.id,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["badges"] });
+      queryClient.invalidateQueries({ queryKey: ["media"] });
       showToast.success("Badge uploaded successfully!");
       navigate("/admin/badges");
     },
@@ -51,8 +56,6 @@ function ImportBadgePage() {
 
     setUploading(true);
     try {
-      // TODO: This needs to be updated when the actual upload endpoint is available
-      // For now, creating a badge with the file name
       await uploadMutation.mutateAsync(file);
     } catch {
       // Error handled in onError
