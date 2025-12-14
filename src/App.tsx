@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage";
 import MasterDataPage from "./pages/MasterDataPage";
 import MediaPage from "./pages/MediaPage";
 import ScenariosPage from "./pages/ScenariosPage";
+import EditScenarioPage from "./pages/EditScenarioPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="admin" element={<DashboardPage />} />
           <Route path="admin/scenarios" element={<ScenariosPage />} />
           <Route path="admin/scenarios/import" element={<ImportScenarioPage />} />
+          <Route path="admin/scenarios/edit/:id" element={<EditScenarioPage />} />
           <Route path="admin/media" element={<MediaPage />} />
           <Route path="admin/media/import" element={<ImportMediaPage />} />
           <Route path="admin/badges" element={<BadgesPage />} />
