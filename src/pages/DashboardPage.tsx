@@ -32,13 +32,7 @@ function DashboardPage() {
   }
 
   if (error) {
-    return (
-      <ErrorAlert
-        error={error}
-        title="Error loading dashboard"
-        onRetry={() => refetch()}
-      />
-    );
+    return <ErrorAlert error={error} title="Error loading dashboard" onRetry={() => refetch()} />;
   }
 
   return (
@@ -148,8 +142,8 @@ function DashboardPage() {
             <div className="card-body">
               <h5 className="card-title">Welcome to Mystira Admin</h5>
               <p className="card-text">
-                This is the admin dashboard. Use the navigation menu to manage
-                scenarios, media, badges, and other content.
+                This is the admin dashboard. Use the navigation menu to manage scenarios, media,
+                badges, and other content.
               </p>
             </div>
           </div>

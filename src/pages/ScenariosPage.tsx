@@ -6,6 +6,7 @@ import ErrorAlert from "../components/ErrorAlert";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
+import { showToast } from "../utils/toast";
 
 function ScenariosPage() {
   const [page, setPage] = useState(1);
@@ -34,8 +35,9 @@ function ScenariosPage() {
     if (window.confirm("Are you sure you want to delete this scenario?")) {
       try {
         await deleteMutation.mutateAsync(id);
+        showToast.success("Scenario deleted successfully");
       } catch (err) {
-        alert("Failed to delete scenario");
+        showToast.error("Failed to delete scenario");
       }
     }
   };
