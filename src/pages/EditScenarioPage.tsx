@@ -127,66 +127,39 @@ function EditScenarioPage() {
       <div className="card">
         <div className="card-body">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-3">
-              <label htmlFor="title" className="form-label">
-                Title <span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                className={`form-control ${errors.title ? "is-invalid" : ""}`}
-                id="title"
-                {...register("title")}
-              />
-              {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
-            </div>
+            <FormField label="Title" error={errors.title?.message} required>
+              <TextInput id="title" {...register("title")} />
+            </FormField>
 
-            <div className="mb-3">
-              <label htmlFor="description" className="form-label">
-                Description
-              </label>
-              <textarea
-                className={`form-control ${errors.description ? "is-invalid" : ""}`}
-                id="description"
-                rows={5}
-                {...register("description")}
-              />
-              {errors.description && (
-                <div className="invalid-feedback">{errors.description.message}</div>
-              )}
-            </div>
+            <FormField label="Description" error={errors.description?.message}>
+              <Textarea id="description" rows={5} {...register("description")} />
+            </FormField>
 
-            <div className="mb-3">
-              <label htmlFor="ageRating" className="form-label">
-                Age Rating <span className="text-danger">*</span>
-              </label>
-              <input
-                type="number"
-                className={`form-control ${errors.ageRating ? "is-invalid" : ""}`}
+            <FormField
+              label="Age Rating"
+              error={errors.ageRating?.message}
+              required
+              helpText="Age rating from 0 to 18"
+            >
+              <NumberInput
                 id="ageRating"
                 min="0"
                 max="18"
                 {...register("ageRating", { valueAsNumber: true })}
               />
-              {errors.ageRating && (
-                <div className="invalid-feedback">{errors.ageRating.message}</div>
-              )}
-              <div className="form-text">Age rating from 0 to 18</div>
-            </div>
+            </FormField>
 
-            <div className="mb-3">
-              <label htmlFor="tags" className="form-label">
-                Tags
-              </label>
-              <input
-                type="text"
-                className={`form-control ${errors.tags ? "is-invalid" : ""}`}
+            <FormField
+              label="Tags"
+              error={errors.tags?.message}
+              helpText="Enter tags separated by commas"
+            >
+              <TextInput
                 id="tags"
                 placeholder="Comma-separated tags (e.g., fantasy, adventure, mystery)"
                 {...register("tags")}
               />
-              {errors.tags && <div className="invalid-feedback">{errors.tags.message}</div>}
-              <div className="form-text">Enter tags separated by commas</div>
-            </div>
+            </FormField>
 
             <div className="d-flex gap-2">
               <button
