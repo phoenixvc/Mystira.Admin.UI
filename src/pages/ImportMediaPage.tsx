@@ -14,11 +14,11 @@ function ImportMediaPage() {
     mutationFn: (file: File) => mediaApi.uploadMedia(file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
-      alert("Media uploaded successfully!");
+      showToast.success("Media uploaded successfully!");
       navigate("/admin/media");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload media file");
+      showToast.error(error instanceof Error ? error.message : "Failed to upload media file");
       setUploading(false);
     },
   });
@@ -33,7 +33,7 @@ function ImportMediaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a file");
+      showToast.error("Please select a file");
       return;
     }
 

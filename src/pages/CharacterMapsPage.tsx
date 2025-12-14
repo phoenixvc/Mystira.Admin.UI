@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { characterMapsApi } from "../api/characterMaps";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
+import { showToast } from "../utils/toast";
 
 function CharacterMapsPage() {
   const [page, setPage] = useState(1);
@@ -32,8 +33,9 @@ function CharacterMapsPage() {
     if (window.confirm("Are you sure you want to delete this character map?")) {
       try {
         await deleteMutation.mutateAsync(id);
+        showToast.success("Character map deleted successfully");
       } catch (err) {
-        alert("Failed to delete character map");
+        showToast.error("Failed to delete character map");
       }
     }
   };

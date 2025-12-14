@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { scenariosApi } from "../api/scenarios";
+import { showToast } from "../utils/toast";
 
 function ImportScenarioPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,11 +13,11 @@ function ImportScenarioPage() {
   const uploadMutation = useMutation({
     mutationFn: (file: File) => scenariosApi.uploadScenario(file, overwriteExisting),
     onSuccess: data => {
-      alert(data.message || "Scenario uploaded successfully!");
+      showToast.success(data.message || "Scenario uploaded successfully!");
       navigate("/admin/scenarios");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload scenario file");
+      showToast.error(error instanceof Error ? error.message : "Failed to upload scenario file");
       setUploading(false);
     },
   });
@@ -25,7 +26,7 @@ function ImportScenarioPage() {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       if (!selectedFile.name.endsWith(".yaml") && !selectedFile.name.endsWith(".yml")) {
-        alert("Please select a .yaml or .yml file");
+        showToast.error("Please select a .yaml or .yml file");
         return;
       }
       setFile(selectedFile);
