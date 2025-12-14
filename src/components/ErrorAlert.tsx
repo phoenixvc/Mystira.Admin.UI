@@ -15,11 +15,13 @@ function ErrorAlert({ error, title = "Error", onRetry }: ErrorAlertProps) {
       </h5>
       <p className="mb-0">{message}</p>
       {onRetry && (
-        <hr />
-        <button className="btn btn-outline-danger btn-sm" onClick={onRetry}>
-          <i className="bi bi-arrow-clockwise me-1"></i>
-          Retry
-        </button>
+        <>
+          <hr />
+          <button className="btn btn-outline-danger btn-sm" onClick={onRetry}>
+            <i className="bi bi-arrow-clockwise me-1"></i>
+            Retry
+          </button>
+        </>
       )}
     </div>
   );
