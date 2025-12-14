@@ -5,6 +5,7 @@ import BundlesPage from "./pages/BundlesPage";
 import CharacterMapsPage from "./pages/CharacterMapsPage";
 import DashboardPage from "./pages/DashboardPage";
 import ImportBundlePage from "./pages/ImportBundlePage";
+import MasterDataPage from "./pages/MasterDataPage";
 import ImportCharacterMapPage from "./pages/ImportCharacterMapPage";
 import ImportMediaPage from "./pages/ImportMediaPage";
 import ImportScenarioPage from "./pages/ImportScenarioPage";
@@ -39,6 +40,10 @@ function App() {
           <Route
             path="admin/character-maps/import"
             element={<ImportCharacterMapPage />}
+          />
+          <Route
+            path="admin/master-data/:type"
+            element={<MasterDataPage />}
           />
         </Route>
       </Routes>

@@ -4,5 +4,6 @@ export * from "./badges";
 export * from "./bundles";
 export * from "./characterMaps";
 export * from "./client";
+export * from "./masterData";
 export * from "./media";
 export * from "./scenarios";

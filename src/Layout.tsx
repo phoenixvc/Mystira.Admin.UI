@@ -62,6 +62,44 @@ function Layout() {
                     Character Maps
                   </Link>
                 </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Master Data
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <Link className="dropdown-item" to="/admin/master-data/age-groups">
+                        Age Groups
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/admin/master-data/archetypes">
+                        Archetypes
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/admin/master-data/compass-axes">
+                        Compass Axes
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/admin/master-data/echo-types">
+                        Echo Types
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/admin/master-data/fantasy-themes">
+                        Fantasy Themes
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
               </ul>
               <ul className="navbar-nav">
                 <li className="nav-item">
