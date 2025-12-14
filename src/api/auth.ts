@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export interface LoginRequest {
   email: string;
@@ -16,7 +16,7 @@ export interface LoginResponse {
 
 export const authApi = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('/admin/auth/login', {
+    const response = await apiClient.post<LoginResponse>("/admin/auth/login", {
       email,
       password,
     });
@@ -24,6 +24,6 @@ export const authApi = {
   },
 
   logout: async (): Promise<void> => {
-    await apiClient.post('/admin/auth/logout');
+    await apiClient.post("/admin/auth/logout");
   },
 };

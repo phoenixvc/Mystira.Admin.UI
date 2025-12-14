@@ -1,5 +1,5 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from './state/authStore';
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useAuthStore } from "./state/authStore";
 
 function Layout() {
   const { logout } = useAuthStore();
@@ -7,7 +7,7 @@ function Layout() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -54,7 +54,11 @@ function Layout() {
                     id="logoutBtn"
                     className="nav-link btn btn-link"
                     onClick={handleLogout}
-                    style={{ border: 'none', background: 'none', color: 'inherit' }}
+                    style={{
+                      border: "none",
+                      background: "none",
+                      color: "inherit",
+                    }}
                   >
                     Logout
                   </button>

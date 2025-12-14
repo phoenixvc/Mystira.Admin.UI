@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { adminApi } from '../api/admin';
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { adminApi } from "../api/admin";
 
 function DashboardPage() {
   const [stats, setStats] = useState({
@@ -11,7 +11,7 @@ function DashboardPage() {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'stats'],
+    queryKey: ["admin", "stats"],
     queryFn: () => adminApi.getStats(),
   });
 
@@ -55,7 +55,7 @@ function DashboardPage() {
                     Total Scenarios
                   </div>
                   <div className="h5 mb-0 font-weight-bold text-gray-800">
-                    {isLoading ? '-' : stats.totalScenarios}
+                    {isLoading ? "-" : stats.totalScenarios}
                   </div>
                 </div>
                 <div className="col-auto">
@@ -75,7 +75,7 @@ function DashboardPage() {
                     Media Files
                   </div>
                   <div className="h5 mb-0 font-weight-bold text-gray-800">
-                    {isLoading ? '-' : stats.totalMedia}
+                    {isLoading ? "-" : stats.totalMedia}
                   </div>
                 </div>
                 <div className="col-auto">
@@ -95,7 +95,7 @@ function DashboardPage() {
                     Badges
                   </div>
                   <div className="h5 mb-0 font-weight-bold text-gray-800">
-                    {isLoading ? '-' : stats.totalBadges}
+                    {isLoading ? "-" : stats.totalBadges}
                   </div>
                 </div>
                 <div className="col-auto">
@@ -115,7 +115,7 @@ function DashboardPage() {
                     Bundles
                   </div>
                   <div className="h5 mb-0 font-weight-bold text-gray-800">
-                    {isLoading ? '-' : stats.totalBundles}
+                    {isLoading ? "-" : stats.totalBundles}
                   </div>
                 </div>
                 <div className="col-auto">
