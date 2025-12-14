@@ -2,27 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../api/auth";
 import { useAuthStore } from "../state/authStore";
+import { showToast } from "../utils/toast";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
       const result = await authApi.login(email, password);
       // Cookie-based auth - no token needed, just mark as authenticated
       login("authenticated"); // Use placeholder token for state management
+      showToast.success("Login successful!");
       navigate("/admin");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      showToast.error(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -36,11 +36,6 @@ function LoginPage() {
             <div className="card-body p-5">
               <h2 className="card-title text-center mb-4">Mystira Admin</h2>
               <form onSubmit={handleSubmit}>
-                {error && (
-                  <div className="alert alert-danger" role="alert">
-                    {error}
-                  </div>
-                )}
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     Email
