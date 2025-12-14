@@ -137,9 +137,14 @@ function BadgesPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No badges found.</p>
-              <Link to="/admin/badges/import" className="btn btn-primary">
-                Import Your First Badge
-              </Link>
+              <div className="d-flex gap-2 justify-content-center">
+                <Link to="/admin/badges/create" className="btn btn-primary">
+                  Create Your First Badge
+                </Link>
+                <Link to="/admin/badges/import" className="btn btn-outline-primary">
+                  Import Badge
+                </Link>
+              </div>
             </div>
           )}
         </div>

@@ -137,9 +137,14 @@ function CharacterMapsPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No character maps found.</p>
-              <Link to="/admin/character-maps/import" className="btn btn-primary">
-                Import Your First Character Map
-              </Link>
+              <div className="d-flex gap-2 justify-content-center">
+                <Link to="/admin/character-maps/create" className="btn btn-primary">
+                  Create Your First Character Map
+                </Link>
+                <Link to="/admin/character-maps/import" className="btn btn-outline-primary">
+                  Import Character Map
+                </Link>
+              </div>
             </div>
           )}
         </div>

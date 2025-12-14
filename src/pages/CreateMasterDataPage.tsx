@@ -70,7 +70,10 @@ function CreateMasterDataPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (!type || !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)) {
+  if (
+    !type ||
+    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
+  ) {
     return (
       <div className="alert alert-danger" role="alert">
         Invalid master data type.
@@ -160,7 +163,9 @@ function CreateMasterDataPage() {
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
-      showToast.error(error instanceof Error ? error.message : `Failed to create ${getTitle().toLowerCase()}`);
+      showToast.error(
+        error instanceof Error ? error.message : `Failed to create ${getTitle().toLowerCase()}`
+      );
     },
   });
 

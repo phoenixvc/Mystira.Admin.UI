@@ -143,9 +143,14 @@ function ScenariosPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No scenarios found.</p>
-              <Link to="/admin/scenarios/import" className="btn btn-primary">
-                Import Your First Scenario
-              </Link>
+              <div className="d-flex gap-2 justify-content-center">
+                <Link to="/admin/scenarios/create" className="btn btn-primary">
+                  Create Your First Scenario
+                </Link>
+                <Link to="/admin/scenarios/import" className="btn btn-outline-primary">
+                  Import Scenario
+                </Link>
+              </div>
             </div>
           )}
         </div>
