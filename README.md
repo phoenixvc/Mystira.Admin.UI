@@ -40,29 +40,71 @@ This is a modern SPA frontend that connects to the `Mystira.Admin.Api` backend s
 
 ## Migration Status
 
-**Current Phase**: Phase 2 - Repository Setup (In Progress)
+**Current Phase**: Phase 3 - Admin UI Code Migration (In Progress)
 
 See [Migration Phases Documentation](../../docs/MIGRATION_PHASES.md) for detailed status and progress tracking.
 
-### Migration Plan
+### Migration Progress
 
-1. ✅ Repository created
-2. ⏳ Extract Admin UI code from `Mystira.App`
-3. ⏳ Set up modern frontend stack (React/Vue/Next.js/etc)
-4. ⏳ Configure API integration with `Mystira.Admin.Api`
-5. ⏳ Set up CI/CD pipeline
-6. ⏳ Deploy and verify functionality
-7. ⏳ Remove Admin UI from `Mystira.App` monorepo
-
-**Note**: Repository is currently empty (no commits). First commit will be made once code extraction begins.
+1. ✅ Repository created and registered as submodule
+2. ✅ Project structure initialized (React + TypeScript + Vite)
+3. ✅ API client infrastructure complete
+4. ✅ Authentication flow implemented (cookie-based)
+5. ✅ Core pages migrated: Dashboard, Scenarios, Media
+6. ⏳ Remaining pages: Badges, Bundles, Character Maps, Master Data, Import pages
+7. ⏳ Set up CI/CD pipeline
+8. ⏳ Deploy and verify functionality
+9. ⏳ Remove Admin UI from `Mystira.App` monorepo
 
 ## Setup
 
-_Setup instructions will be added once the initial codebase is migrated._
+### Prerequisites
+
+- Node.js 18+ and pnpm 8+
+- Admin API running (for development: `http://localhost:5000`)
+
+### Installation
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+```
+
+The application will be available at `http://localhost:7001`
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000
+```
 
 ## Development
 
-_Development instructions will be added once the initial codebase is migrated._
+### Project Structure
+
+```
+src/
+├── api/          # API client modules (auth, scenarios, media, etc.)
+├── pages/        # Page components (Dashboard, Scenarios, Media, etc.)
+├── state/        # Zustand stores (auth, UI state)
+├── styles/       # CSS files (Bootstrap + custom admin styles)
+└── Layout.tsx    # Main layout with navigation
+```
+
+### Available Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm preview` - Preview production build
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+- `pnpm test` - Run tests
+- `pnpm typecheck` - Type check without building
 
 ## Contributing
 
