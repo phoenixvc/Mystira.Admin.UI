@@ -4,6 +4,9 @@ import BadgesPage from "./pages/BadgesPage";
 import BundlesPage from "./pages/BundlesPage";
 import CharacterMapsPage from "./pages/CharacterMapsPage";
 import DashboardPage from "./pages/DashboardPage";
+import EditBadgePage from "./pages/EditBadgePage";
+import EditCharacterMapPage from "./pages/EditCharacterMapPage";
+import EditMasterDataPage from "./pages/EditMasterDataPage";
 import EditScenarioPage from "./pages/EditScenarioPage";
 import ImportBadgePage from "./pages/ImportBadgePage";
 import ImportBundlePage from "./pages/ImportBundlePage";
@@ -38,11 +41,14 @@ function App() {
           <Route path="admin/media/import" element={<ImportMediaPage />} />
           <Route path="admin/badges" element={<BadgesPage />} />
           <Route path="admin/badges/import" element={<ImportBadgePage />} />
+          <Route path="admin/badges/edit/:id" element={<EditBadgePage />} />
           <Route path="admin/bundles" element={<BundlesPage />} />
           <Route path="admin/bundles/import" element={<ImportBundlePage />} />
           <Route path="admin/character-maps" element={<CharacterMapsPage />} />
           <Route path="admin/character-maps/import" element={<ImportCharacterMapPage />} />
+          <Route path="admin/character-maps/edit/:id" element={<EditCharacterMapPage />} />
           <Route path="admin/master-data/:type" element={<MasterDataPage />} />
+          <Route path="admin/master-data/:type/edit/:id" element={<EditMasterDataPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

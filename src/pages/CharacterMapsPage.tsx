@@ -108,15 +108,12 @@ function CharacterMapsPage() {
                         <td>{map.imageId || "-"}</td>
                         <td>
                           <div className="btn-group btn-group-sm">
-                            <button
+                            <Link
+                              to={`/admin/character-maps/edit/${map.id}`}
                               className="btn btn-outline-primary"
-                              onClick={() => {
-                                // TODO: Implement edit
-                                showToast.info("Edit functionality coming soon");
-                              }}
                             >
                               <i className="bi bi-pencil"></i> Edit
-                            </button>
+                            </Link>
                             <button
                               className="btn btn-outline-danger"
                               onClick={() => handleDelete(map.id)}

@@ -108,15 +108,12 @@ function BadgesPage() {
                         <td>{badge.imageId || "-"}</td>
                         <td>
                           <div className="btn-group btn-group-sm">
-                            <button
+                            <Link
+                              to={`/admin/badges/edit/${badge.id}`}
                               className="btn btn-outline-primary"
-                              onClick={() => {
-                                // TODO: Implement edit
-                                showToast.info("Edit functionality coming soon");
-                              }}
                             >
                               <i className="bi bi-pencil"></i> Edit
-                            </button>
+                            </Link>
                             <button
                               className="btn btn-outline-danger"
                               onClick={() => handleDelete(badge.id)}
