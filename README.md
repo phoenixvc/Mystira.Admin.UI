@@ -54,8 +54,10 @@ See [Migration Phases Documentation](../../docs/MIGRATION_PHASES.md) for detaile
 6. ✅ Master Data pages: Age Groups, Archetypes, Compass Axes, Echo Types, Fantasy Themes
 7. ✅ All import pages: Scenario, Media, Bundle, Badge, Character Map
 8. ✅ Reusable UI components: Pagination, SearchBar, LoadingSpinner, ErrorAlert
-9. ⏳ Edit/create forms with validation (React Hook Form + Zod)
-10. ⏳ Enhanced error handling and toast notifications
+9. ✅ Form components: FormField, TextInput, Textarea, NumberInput
+10. ✅ Toast notifications implemented (react-hot-toast)
+11. ✅ Edit Scenario form with React Hook Form + Zod validation
+12. ⏳ Additional edit/create forms (Media, Badges, Bundles, etc.)
 11. ⏳ Set up CI/CD pipeline
 12. ⏳ Deploy and verify functionality
 13. ⏳ Remove Admin UI from `Mystira.App` monorepo
@@ -94,10 +96,11 @@ VITE_API_BASE_URL=http://localhost:5000
 ```
 src/
 ├── api/          # API client modules (auth, scenarios, media, badges, bundles, etc.)
-├── components/   # Reusable components (Pagination, SearchBar, LoadingSpinner, ErrorAlert)
+├── components/   # Reusable components (Pagination, SearchBar, LoadingSpinner, ErrorAlert, FormField, etc.)
 ├── pages/        # Page components (Dashboard, Scenarios, Media, Badges, etc.)
 ├── state/        # Zustand stores (auth, UI state)
 ├── styles/       # CSS files (Bootstrap + custom admin styles)
+├── utils/        # Utility functions (toast helpers, etc.)
 └── Layout.tsx    # Main layout with navigation
 ```
 
