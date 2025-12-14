@@ -175,9 +175,9 @@ function MediaPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No media files found.</p>
-              <label className="btn btn-primary" htmlFor="file-upload">
+              <Link to="/admin/media/import" className="btn btn-primary">
                 Upload Your First Media File
-              </label>
+              </Link>
             </div>
           )}
         </div>
