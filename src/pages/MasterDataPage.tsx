@@ -126,6 +126,10 @@ function MasterDataPage() {
     mutationFn: (id: string) => config.api.deleteItem(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [type] });
+      showToast.success(`${config.title.slice(0, -1)} deleted successfully`);
+    },
+    onError: () => {
+      showToast.error(`Failed to delete ${config.title.toLowerCase()}`);
     },
   });
 
@@ -133,9 +137,8 @@ function MasterDataPage() {
     if (window.confirm(`Are you sure you want to delete this ${config.title.toLowerCase()}?`)) {
       try {
         await deleteMutation.mutateAsync(id);
-        showToast.success(`${config.title.slice(0, -1)} deleted successfully`);
       } catch (err) {
-        showToast.error(`Failed to delete ${config.title.toLowerCase()}`);
+        // Error handled by onError callback
       }
     }
   };

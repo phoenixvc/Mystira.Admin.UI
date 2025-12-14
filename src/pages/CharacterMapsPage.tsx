@@ -28,6 +28,10 @@ function CharacterMapsPage() {
     mutationFn: (id: string) => characterMapsApi.deleteCharacterMap(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["characterMaps"] });
+      showToast.success("Character map deleted successfully");
+    },
+    onError: () => {
+      showToast.error("Failed to delete character map");
     },
   });
 
@@ -35,9 +39,8 @@ function CharacterMapsPage() {
     if (window.confirm("Are you sure you want to delete this character map?")) {
       try {
         await deleteMutation.mutateAsync(id);
-        showToast.success("Character map deleted successfully");
       } catch (err) {
-        showToast.error("Failed to delete character map");
+        // Error handled by onError callback
       }
     }
   };

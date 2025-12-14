@@ -28,6 +28,10 @@ function ScenariosPage() {
     mutationFn: (id: string) => scenariosApi.deleteScenario(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scenarios"] });
+      showToast.success("Scenario deleted successfully");
+    },
+    onError: () => {
+      showToast.error("Failed to delete scenario");
     },
   });
 
@@ -35,9 +39,8 @@ function ScenariosPage() {
     if (window.confirm("Are you sure you want to delete this scenario?")) {
       try {
         await deleteMutation.mutateAsync(id);
-        showToast.success("Scenario deleted successfully");
       } catch (err) {
-        showToast.error("Failed to delete scenario");
+        // Error handled by onError callback
       }
     }
   };

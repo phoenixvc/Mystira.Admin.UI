@@ -23,26 +23,19 @@ export interface BundleQueryResponse {
 }
 
 export const bundlesApi = {
-  getBundles: async (
-    request?: BundleQueryRequest
-  ): Promise<BundleQueryResponse> => {
-    const response = await apiClient.get<BundleQueryResponse>(
-      "/api/admin/bundlesadmin",
-      { params: request }
-    );
+  getBundles: async (request?: BundleQueryRequest): Promise<BundleQueryResponse> => {
+    const response = await apiClient.get<BundleQueryResponse>("/api/admin/bundlesadmin", {
+      params: request,
+    });
     return response.data;
   },
 
   getBundle: async (id: string): Promise<Bundle> => {
-    const response = await apiClient.get<Bundle>(
-      `/api/admin/bundlesadmin/${id}`
-    );
+    const response = await apiClient.get<Bundle>(`/api/admin/bundlesadmin/${id}`);
     return response.data;
   },
 
-  validateBundle: async (
-    file: File
-  ): Promise<{ success: boolean; result: unknown }> => {
+  validateBundle: async (file: File): Promise<{ success: boolean; result: unknown }> => {
     const formData = new FormData();
     formData.append("bundleFile", file);
 
@@ -76,5 +69,9 @@ export const bundlesApi = {
       },
     });
     return response.data;
+  },
+
+  deleteBundle: async (id: string): Promise<void> => {
+    await apiClient.delete(`/api/admin/bundlesadmin/${id}`);
   },
 };

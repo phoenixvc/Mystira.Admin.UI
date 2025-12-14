@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { bundlesApi } from "../api/bundles";
@@ -24,10 +24,24 @@ function BundlesPage() {
       }),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => bundlesApi.deleteBundle(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bundles"] });
+      showToast.success("Bundle deleted successfully");
+    },
+    onError: () => {
+      showToast.error("Failed to delete bundle");
+    },
+  });
+
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this bundle?")) {
-      // TODO: Implement delete when API endpoint is available
-      showToast.info("Delete functionality coming soon");
+      try {
+        await deleteMutation.mutateAsync(id);
+      } catch (err) {
+        // Error handled by onError callback
+      }
     }
   };
 
@@ -107,6 +121,7 @@ function BundlesPage() {
                             <button
                               className="btn btn-outline-danger"
                               onClick={() => handleDelete(bundle.id)}
+                              disabled={deleteMutation.isPending}
                             >
                               <i className="bi bi-trash"></i> Delete
                             </button>

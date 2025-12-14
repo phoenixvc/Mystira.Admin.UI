@@ -28,6 +28,10 @@ function BadgesPage() {
     mutationFn: (id: string) => badgesApi.deleteBadge(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["badges"] });
+      showToast.success("Badge deleted successfully");
+    },
+    onError: () => {
+      showToast.error("Failed to delete badge");
     },
   });
 
@@ -35,9 +39,8 @@ function BadgesPage() {
     if (window.confirm("Are you sure you want to delete this badge?")) {
       try {
         await deleteMutation.mutateAsync(id);
-        showToast.success("Badge deleted successfully");
       } catch (err) {
-        showToast.error("Failed to delete badge");
+        // Error handled by onError callback
       }
     }
   };

@@ -28,6 +28,10 @@ function MediaPage() {
     mutationFn: (id: string) => mediaApi.deleteMedia(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
+      showToast.success("Media file deleted successfully");
+    },
+    onError: () => {
+      showToast.error("Failed to delete media file");
     },
   });
 
@@ -35,9 +39,8 @@ function MediaPage() {
     if (window.confirm("Are you sure you want to delete this media file?")) {
       try {
         await deleteMutation.mutateAsync(id);
-        showToast.success("Media file deleted successfully");
       } catch (err) {
-        showToast.error("Failed to delete media file");
+        // Error handled by onError callback
       }
     }
   };
