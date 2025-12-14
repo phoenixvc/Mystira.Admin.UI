@@ -7,6 +7,8 @@ import ScenariosPage from "./pages/ScenariosPage";
 import BadgesPage from "./pages/BadgesPage";
 import BundlesPage from "./pages/BundlesPage";
 import ImportScenarioPage from "./pages/ImportScenarioPage";
+import ImportMediaPage from "./pages/ImportMediaPage";
+import ImportBundlePage from "./pages/ImportBundlePage";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
@@ -30,8 +32,10 @@ function App() {
             element={<ImportScenarioPage />}
           />
           <Route path="admin/media" element={<MediaPage />} />
+          <Route path="admin/media/import" element={<ImportMediaPage />} />
           <Route path="admin/badges" element={<BadgesPage />} />
           <Route path="admin/bundles" element={<BundlesPage />} />
+          <Route path="admin/bundles/import" element={<ImportBundlePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

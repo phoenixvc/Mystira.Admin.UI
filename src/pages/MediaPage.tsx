@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { mediaApi } from "../api/media";
 
@@ -6,7 +7,6 @@ function MediaPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
-  const [uploading, setUploading] = useState(false);
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
@@ -26,17 +26,6 @@ function MediaPage() {
     },
   });
 
-  const uploadMutation = useMutation({
-    mutationFn: (file: File) => mediaApi.uploadMedia(file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-      setUploading(false);
-    },
-    onError: () => {
-      setUploading(false);
-    },
-  });
-
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this media file?")) {
       try {
@@ -47,18 +36,6 @@ function MediaPage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      await uploadMutation.mutateAsync(file);
-      e.target.value = ""; // Reset input
-    } catch (err) {
-      alert("Failed to upload media file");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -85,17 +62,9 @@ function MediaPage() {
         <h1 className="h2">🖼️ Media</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <label className="btn btn-sm btn-primary" htmlFor="file-upload">
-              <i className="bi bi-upload"></i>{" "}
-              {uploading ? "Uploading..." : "Upload Media"}
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              className="d-none"
-              onChange={handleFileUpload}
-              disabled={uploading}
-            />
+            <Link to="/admin/media/import" className="btn btn-sm btn-primary">
+              <i className="bi bi-upload"></i> Upload Media
+            </Link>
           </div>
         </div>
       </div>
