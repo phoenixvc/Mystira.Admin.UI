@@ -13,6 +13,8 @@ import {
   FantasyTheme,
   fantasyThemesApi,
 } from "../api/masterData";
+import ErrorAlert from "../components/ErrorAlert";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import { showToast } from "../utils/toast";

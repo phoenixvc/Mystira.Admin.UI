@@ -15,7 +15,7 @@ function ImportBadgePage() {
     mutationFn: async (file: File) => {
       // First upload the image to media
       const mediaAsset = await mediaApi.uploadMedia(file);
-      
+
       // Then create a badge with the uploaded image ID
       const badgeName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
       return badgesApi.createBadge({
