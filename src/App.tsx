@@ -4,6 +4,7 @@ import BadgesPage from "./pages/BadgesPage";
 import BundlesPage from "./pages/BundlesPage";
 import CharacterMapsPage from "./pages/CharacterMapsPage";
 import DashboardPage from "./pages/DashboardPage";
+import EditScenarioPage from "./pages/EditScenarioPage";
 import ImportBadgePage from "./pages/ImportBadgePage";
 import ImportBundlePage from "./pages/ImportBundlePage";
 import ImportCharacterMapPage from "./pages/ImportCharacterMapPage";
@@ -13,7 +14,6 @@ import LoginPage from "./pages/LoginPage";
 import MasterDataPage from "./pages/MasterDataPage";
 import MediaPage from "./pages/MediaPage";
 import ScenariosPage from "./pages/ScenariosPage";
-import EditScenarioPage from "./pages/EditScenarioPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {

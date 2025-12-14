@@ -1,12 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
-import { scenariosApi, Scenario } from "../api/scenarios";
+import { scenariosApi } from "../api/scenarios";
 import ErrorAlert from "../components/ErrorAlert";
+import FormField from "../components/FormField";
 import LoadingSpinner from "../components/LoadingSpinner";
+import NumberInput from "../components/NumberInput";
+import Textarea from "../components/Textarea";
+import TextInput from "../components/TextInput";
 import { showToast } from "../utils/toast";
 
 const scenarioSchema = z.object({
@@ -38,7 +42,11 @@ function EditScenarioPage() {
     },
   });
 
-  const { data: scenario, isLoading, error } = useQuery({
+  const {
+    data: scenario,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["scenario", id],
     queryFn: () => scenariosApi.getScenario(id!),
     enabled: !!id,
@@ -47,7 +55,10 @@ function EditScenarioPage() {
   const updateMutation = useMutation({
     mutationFn: (data: ScenarioFormData) => {
       const tags = data.tags
-        ? data.tags.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0)
+        ? data.tags
+            .split(",")
+            .map(tag => tag.trim())
+            .filter(tag => tag.length > 0)
         : [];
       return scenariosApi.updateScenario(id!, {
         title: data.title,
@@ -126,9 +137,7 @@ function EditScenarioPage() {
                 id="title"
                 {...register("title")}
               />
-              {errors.title && (
-                <div className="invalid-feedback">{errors.title.message}</div>
-              )}
+              {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
             </div>
 
             <div className="mb-3">
@@ -175,9 +184,7 @@ function EditScenarioPage() {
                 placeholder="Comma-separated tags (e.g., fantasy, adventure, mystery)"
                 {...register("tags")}
               />
-              {errors.tags && (
-                <div className="invalid-feedback">{errors.tags.message}</div>
-              )}
+              {errors.tags && <div className="invalid-feedback">{errors.tags.message}</div>}
               <div className="form-text">Enter tags separated by commas</div>
             </div>
 

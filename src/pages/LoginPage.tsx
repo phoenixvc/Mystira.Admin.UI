@@ -16,7 +16,7 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await authApi.login(email, password);
+      await authApi.login(email, password);
       // Cookie-based auth - no token needed, just mark as authenticated
       login("authenticated"); // Use placeholder token for state management
       showToast.success("Login successful!");
@@ -45,7 +45,7 @@ function LoginPage() {
                     className="form-control"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -58,15 +58,11 @@ function LoginPage() {
                     className="form-control"
                     id="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     required
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary w-100"
-                  disabled={loading}
-                >
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
                   {loading ? "Logging in..." : "Login"}
                 </button>
               </form>

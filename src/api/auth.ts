@@ -10,17 +10,11 @@ export interface LoginResponse {
 }
 
 export const authApi = {
-  login: async (
-    username: string,
-    password: string
-  ): Promise<{ Message: string }> => {
-    const response = await apiClient.post<{ Message: string }>(
-      "/api/auth/login",
-      {
-        Username: username,
-        Password: password,
-      }
-    );
+  login: async (username: string, password: string): Promise<{ Message: string }> => {
+    const response = await apiClient.post<{ Message: string }>("/api/auth/login", {
+      Username: username,
+      Password: password,
+    });
     return response.data;
   },
 

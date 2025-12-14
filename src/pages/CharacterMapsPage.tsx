@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { characterMapsApi } from "../api/characterMaps";
+import ErrorAlert from "../components/ErrorAlert";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import { showToast } from "../utils/toast";
@@ -46,20 +48,16 @@ function CharacterMapsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading character maps..." />;
   }
 
   if (error) {
     return (
-      <div className="alert alert-danger" role="alert">
-        Error loading character maps: {error instanceof Error ? error.message : "Unknown error"}
-      </div>
+      <ErrorAlert
+        error={error}
+        title="Error loading character maps"
+        onRetry={() => queryClient.invalidateQueries({ queryKey: ["characterMaps"] })}
+      />
     );
   }
 
