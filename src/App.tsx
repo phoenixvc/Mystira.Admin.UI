@@ -4,6 +4,7 @@ import BadgesPage from "./pages/BadgesPage";
 import BundlesPage from "./pages/BundlesPage";
 import CharacterMapsPage from "./pages/CharacterMapsPage";
 import DashboardPage from "./pages/DashboardPage";
+import ImportBadgePage from "./pages/ImportBadgePage";
 import ImportBundlePage from "./pages/ImportBundlePage";
 import ImportCharacterMapPage from "./pages/ImportCharacterMapPage";
 import ImportMediaPage from "./pages/ImportMediaPage";
