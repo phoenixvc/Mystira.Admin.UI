@@ -21,11 +21,11 @@ function ImportBadgePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["badges"] });
-      alert("Badge uploaded successfully!");
+      showToast.success("Badge uploaded successfully!");
       navigate("/admin/badges");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload badge file");
+      showToast.error(error instanceof Error ? error.message : "Failed to upload badge file");
       setUploading(false);
     },
   });

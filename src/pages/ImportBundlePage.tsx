@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { bundlesApi } from "../api/bundles";
+import { showToast } from "../utils/toast";
 
 function ImportBundlePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -16,11 +17,15 @@ function ImportBundlePage() {
       bundlesApi.uploadBundle(file, validateReferences, overwriteExisting),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ["bundles"] });
-      alert(data.success ? "Bundle uploaded successfully!" : data.result);
+      if (data.success) {
+        showToast.success("Bundle uploaded successfully!");
+      } else {
+        showToast.error(String(data.result));
+      }
       navigate("/admin/bundles");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload bundle file");
+      showToast.error(error instanceof Error ? error.message : "Failed to upload bundle file");
       setUploading(false);
     },
   });

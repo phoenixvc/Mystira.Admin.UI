@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { characterMapsApi } from "../api/characterMaps";
+import { showToast } from "../utils/toast";
 
 function ImportCharacterMapPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,11 +14,11 @@ function ImportCharacterMapPage() {
     mutationFn: (file: File) => characterMapsApi.uploadCharacterMap(file),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ["characterMaps"] });
-      alert(data.message || "Character map uploaded successfully!");
+      showToast.success(data.message || "Character map uploaded successfully!");
       navigate("/admin/character-maps");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload character map file");
+      showToast.error(error instanceof Error ? error.message : "Failed to upload character map file");
       setUploading(false);
     },
   });
