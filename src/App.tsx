@@ -5,11 +5,11 @@ import BundlesPage from "./pages/BundlesPage";
 import CharacterMapsPage from "./pages/CharacterMapsPage";
 import DashboardPage from "./pages/DashboardPage";
 import ImportBundlePage from "./pages/ImportBundlePage";
-import MasterDataPage from "./pages/MasterDataPage";
 import ImportCharacterMapPage from "./pages/ImportCharacterMapPage";
 import ImportMediaPage from "./pages/ImportMediaPage";
 import ImportScenarioPage from "./pages/ImportScenarioPage";
 import LoginPage from "./pages/LoginPage";
+import MasterDataPage from "./pages/MasterDataPage";
 import MediaPage from "./pages/MediaPage";
 import ScenariosPage from "./pages/ScenariosPage";
 import ProtectedRoute from "./ProtectedRoute";
@@ -34,17 +34,12 @@ function App() {
           <Route path="admin/media" element={<MediaPage />} />
           <Route path="admin/media/import" element={<ImportMediaPage />} />
           <Route path="admin/badges" element={<BadgesPage />} />
+          <Route path="admin/badges/import" element={<ImportBadgePage />} />
           <Route path="admin/bundles" element={<BundlesPage />} />
           <Route path="admin/bundles/import" element={<ImportBundlePage />} />
           <Route path="admin/character-maps" element={<CharacterMapsPage />} />
-          <Route
-            path="admin/character-maps/import"
-            element={<ImportCharacterMapPage />}
-          />
-          <Route
-            path="admin/master-data/:type"
-            element={<MasterDataPage />}
-          />
+          <Route path="admin/character-maps/import" element={<ImportCharacterMapPage />} />
+          <Route path="admin/master-data/:type" element={<MasterDataPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

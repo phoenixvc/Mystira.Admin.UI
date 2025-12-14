@@ -24,11 +24,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             Page {currentPage} of {totalPages}
           </span>
         </li>
-        <li
-          className={`page-item ${
-            currentPage >= totalPages ? "disabled" : ""
-          }`}
-        >
+        <li className={`page-item ${currentPage >= totalPages ? "disabled" : ""}`}>
           <button
             className="page-link"
             onClick={() => onPageChange(currentPage + 1)}

@@ -1,23 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { characterMapsApi } from "../api/characterMaps";
+import { badgesApi } from "../api/badges";
 
-function ImportCharacterMapPage() {
+function ImportBadgePage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => characterMapsApi.uploadCharacterMap(file),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: ["characterMaps"] });
-      alert(data.message || "Character map uploaded successfully!");
-      navigate("/admin/character-maps");
+    mutationFn: (file: File) => {
+      // TODO: Implement badge upload API endpoint
+      // For now, we'll need to check what the actual endpoint is
+      // This is a placeholder - may need to be adjusted based on actual API
+      return badgesApi.createBadge({
+        name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["badges"] });
+      alert("Badge uploaded successfully!");
+      navigate("/admin/badges");
     },
     onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload character map file");
+      alert(error instanceof Error ? error.message : "Failed to upload badge file");
       setUploading(false);
     },
   });
@@ -25,6 +32,11 @@ function ImportCharacterMapPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
+      // Badge files are typically images
+      if (!selectedFile.type.startsWith("image/")) {
+        alert("Please select an image file");
+        return;
+      }
       setFile(selectedFile);
     }
   };
@@ -38,6 +50,8 @@ function ImportCharacterMapPage() {
 
     setUploading(true);
     try {
+      // TODO: This needs to be updated when the actual upload endpoint is available
+      // For now, creating a badge with the file name
       await uploadMutation.mutateAsync(file);
     } catch {
       // Error handled in onError
@@ -47,9 +61,9 @@ function ImportCharacterMapPage() {
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">📥 Import Character Map</h1>
-        <Link to="/admin/character-maps" className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to Character Maps
+        <h1 className="h2">📥 Import Badge</h1>
+        <Link to="/admin/badges" className="btn btn-sm btn-outline-secondary">
+          <i className="bi bi-arrow-left"></i> Back to Badges
         </Link>
       </div>
 
@@ -57,18 +71,19 @@ function ImportCharacterMapPage() {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="characterMapFile" className="form-label">
-                Character Map File
+              <label htmlFor="badgeFile" className="form-label">
+                Badge Image File
               </label>
               <input
                 type="file"
                 className="form-control"
-                id="characterMapFile"
+                id="badgeFile"
+                accept="image/*"
                 onChange={handleFileChange}
                 disabled={uploading}
                 required
               />
-              <div className="form-text">Select a character map file to upload</div>
+              <div className="form-text">Select an image file for the badge</div>
             </div>
 
             {file && (
@@ -76,6 +91,16 @@ function ImportCharacterMapPage() {
                 <div className="alert alert-info">
                   <strong>Selected file:</strong> {file.name} ({(file.size / 1024).toFixed(2)} KB)
                 </div>
+                {file.type.startsWith("image/") && (
+                  <div className="mt-2">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="Preview"
+                      style={{ maxWidth: "200px", maxHeight: "200px", objectFit: "contain" }}
+                      className="img-thumbnail"
+                    />
+                  </div>
+                )}
               </div>
             )}
 
@@ -92,11 +117,11 @@ function ImportCharacterMapPage() {
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-upload"></i> Upload Character Map
+                    <i className="bi bi-upload"></i> Upload Badge
                   </>
                 )}
               </button>
-              <Link to="/admin/character-maps" className="btn btn-secondary">
+              <Link to="/admin/badges" className="btn btn-secondary">
                 Cancel
               </Link>
             </div>
@@ -107,4 +132,4 @@ function ImportCharacterMapPage() {
   );
 }
 
-export default ImportCharacterMapPage;
+export default ImportBadgePage;

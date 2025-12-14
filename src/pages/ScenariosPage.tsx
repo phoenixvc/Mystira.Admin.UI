@@ -37,21 +37,16 @@ function ScenariosPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading scenarios..." />;
   }
 
   if (error) {
     return (
-      <div className="alert alert-danger" role="alert">
-        Error loading scenarios:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
-      </div>
+      <ErrorAlert
+        error={error}
+        title="Error loading scenarios"
+        onRetry={() => queryClient.invalidateQueries({ queryKey: ["scenarios"] })}
+      />
     );
   }
 

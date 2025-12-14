@@ -1,17 +1,17 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
+  AgeGroup,
   ageGroupsApi,
+  Archetype,
   archetypesApi,
   compassAxesApi,
-  echoTypesApi,
-  fantasyThemesApi,
-  AgeGroup,
-  Archetype,
   CompassAxis,
   EchoType,
+  echoTypesApi,
   FantasyTheme,
+  fantasyThemesApi,
 } from "../api/masterData";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
@@ -27,11 +27,7 @@ interface MasterDataPageConfig {
   title: string;
   icon: string;
   api: {
-    getItems: (request?: {
-      page?: number;
-      pageSize?: number;
-      searchTerm?: string;
-    }) => Promise<{
+    getItems: (request?: { page?: number; pageSize?: number; searchTerm?: string }) => Promise<{
       items: unknown[];
       totalCount: number;
       page: number;
@@ -51,8 +47,8 @@ const masterDataConfigs: Record<MasterDataType, MasterDataPageConfig> = {
       getItems: ageGroupsApi.getAgeGroups,
       deleteItem: ageGroupsApi.deleteAgeGroup,
     },
-    getItemName: (item) => (item as AgeGroup).name,
-    getItemDescription: (item) => (item as AgeGroup).description || "-",
+    getItemName: item => (item as AgeGroup).name,
+    getItemDescription: item => (item as AgeGroup).description || "-",
   },
   archetypes: {
     title: "Archetypes",
@@ -61,8 +57,8 @@ const masterDataConfigs: Record<MasterDataType, MasterDataPageConfig> = {
       getItems: archetypesApi.getArchetypes,
       deleteItem: archetypesApi.deleteArchetype,
     },
-    getItemName: (item) => (item as Archetype).name,
-    getItemDescription: (item) => (item as Archetype).description || "-",
+    getItemName: item => (item as Archetype).name,
+    getItemDescription: item => (item as Archetype).description || "-",
   },
   "compass-axes": {
     title: "Compass Axes",
@@ -71,8 +67,8 @@ const masterDataConfigs: Record<MasterDataType, MasterDataPageConfig> = {
       getItems: compassAxesApi.getCompassAxes,
       deleteItem: compassAxesApi.deleteCompassAxis,
     },
-    getItemName: (item) => (item as CompassAxis).name,
-    getItemDescription: (item) => (item as CompassAxis).description || "-",
+    getItemName: item => (item as CompassAxis).name,
+    getItemDescription: item => (item as CompassAxis).description || "-",
   },
   "echo-types": {
     title: "Echo Types",
@@ -81,8 +77,8 @@ const masterDataConfigs: Record<MasterDataType, MasterDataPageConfig> = {
       getItems: echoTypesApi.getEchoTypes,
       deleteItem: echoTypesApi.deleteEchoType,
     },
-    getItemName: (item) => (item as EchoType).name,
-    getItemDescription: (item) => (item as EchoType).description || "-",
+    getItemName: item => (item as EchoType).name,
+    getItemDescription: item => (item as EchoType).description || "-",
   },
   "fantasy-themes": {
     title: "Fantasy Themes",
@@ -91,8 +87,8 @@ const masterDataConfigs: Record<MasterDataType, MasterDataPageConfig> = {
       getItems: fantasyThemesApi.getFantasyThemes,
       deleteItem: fantasyThemesApi.deleteFantasyTheme,
     },
-    getItemName: (item) => (item as FantasyTheme).name,
-    getItemDescription: (item) => (item as FantasyTheme).description || "-",
+    getItemName: item => (item as FantasyTheme).name,
+    getItemDescription: item => (item as FantasyTheme).description || "-",
   },
 };
 
@@ -189,7 +185,7 @@ function MasterDataPage() {
 
       <SearchBar
         value={searchTerm}
-        onChange={(value) => {
+        onChange={value => {
           setSearchTerm(value);
           setPage(1);
         }}
@@ -244,11 +240,7 @@ function MasterDataPage() {
                 </table>
               </div>
 
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-              />
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </>
           ) : (
             <div className="text-center py-5">

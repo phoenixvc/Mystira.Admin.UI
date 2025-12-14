@@ -61,7 +61,7 @@ function BadgesPage() {
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
             <Link to="/admin/badges/import" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Import Badges
+              <i className="bi bi-plus-circle"></i> Import Badge
             </Link>
           </div>
         </div>
