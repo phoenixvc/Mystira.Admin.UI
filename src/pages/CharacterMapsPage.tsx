@@ -69,8 +69,11 @@ function CharacterMapsPage() {
         <h1 className="h2">🗺️ Character Maps</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link to="/admin/character-maps/import" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Import Character Map
+            <Link to="/admin/character-maps/create" className="btn btn-sm btn-primary">
+              <i className="bi bi-plus-circle"></i> Create Character Map
+            </Link>
+            <Link to="/admin/character-maps/import" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-upload"></i> Import Character Map
             </Link>
           </div>
         </div>

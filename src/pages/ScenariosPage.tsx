@@ -69,8 +69,11 @@ function ScenariosPage() {
         <h1 className="h2">📚 Scenarios</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link to="/admin/scenarios/import" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Import Scenario
+            <Link to="/admin/scenarios/create" className="btn btn-sm btn-primary">
+              <i className="bi bi-plus-circle"></i> Create Scenario
+            </Link>
+            <Link to="/admin/scenarios/import" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-upload"></i> Import Scenario
             </Link>
           </div>
         </div>

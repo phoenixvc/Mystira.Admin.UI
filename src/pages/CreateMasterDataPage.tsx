@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
@@ -11,9 +10,7 @@ import {
   echoTypesApi,
   fantasyThemesApi,
 } from "../api/masterData";
-import ErrorAlert from "../components/ErrorAlert";
 import FormField from "../components/FormField";
-import LoadingSpinner from "../components/LoadingSpinner";
 import NumberInput from "../components/NumberInput";
 import Textarea from "../components/Textarea";
 import TextInput from "../components/TextInput";
@@ -68,15 +65,12 @@ type FormData =
   | EchoTypeFormData
   | FantasyThemeFormData;
 
-function EditMasterDataPage() {
-  const { type, id } = useParams<{ type: MasterDataType; id: string }>();
+function CreateMasterDataPage() {
+  const { type } = useParams<{ type: MasterDataType }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
+  if (!type || !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)) {
     return (
       <div className="alert alert-danger" role="alert">
         Invalid master data type.
@@ -117,18 +111,15 @@ function EditMasterDataPage() {
   const getApi = () => {
     switch (type) {
       case "age-groups":
-        return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
+        return ageGroupsApi.createAgeGroup;
       case "archetypes":
-        return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
+        return archetypesApi.createArchetype;
       case "compass-axes":
-        return { get: compassAxesApi.getCompassAxis, update: compassAxesApi.updateCompassAxis };
+        return compassAxesApi.createCompassAxis;
       case "echo-types":
-        return { get: echoTypesApi.getEchoType, update: echoTypesApi.updateEchoType };
+        return echoTypesApi.createEchoType;
       case "fantasy-themes":
-        return {
-          get: fantasyThemesApi.getFantasyTheme,
-          update: fantasyThemesApi.updateFantasyTheme,
-        };
+        return fantasyThemesApi.createFantasyTheme;
     }
   };
 
@@ -154,75 +145,33 @@ function EditMasterDataPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: getDefaultValues(),
   });
 
-  const {
-    data: item,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: [type, id],
-    queryFn: () => api.get(id!),
-    enabled: !!id,
-  });
-
-  const updateMutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: (data: FormData) => {
-      return api.update(id!, data);
+      return api(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [type] });
-      queryClient.invalidateQueries({ queryKey: [type, id] });
-      showToast.success(`${getTitle()} updated successfully!`);
+      showToast.success(`${getTitle()} created successfully!`);
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
-      showToast.error(
-        error instanceof Error ? error.message : `Failed to update ${getTitle().toLowerCase()}`
-      );
+      showToast.error(error instanceof Error ? error.message : `Failed to create ${getTitle().toLowerCase()}`);
     },
   });
 
-  useEffect(() => {
-    if (item) {
-      reset(item as FormData);
-    }
-  }, [item, reset]);
-
   const onSubmit = async (data: FormData) => {
-    await updateMutation.mutateAsync(data);
+    await createMutation.mutateAsync(data);
   };
-
-  if (isLoading) {
-    return <LoadingSpinner message={`Loading ${getTitle().toLowerCase()}...`} />;
-  }
-
-  if (error) {
-    return (
-      <ErrorAlert
-        error={error}
-        title={`Error loading ${getTitle().toLowerCase()}`}
-        onRetry={() => queryClient.invalidateQueries({ queryKey: [type, id] })}
-      />
-    );
-  }
-
-  if (!item) {
-    return (
-      <div className="alert alert-warning" role="alert">
-        {getTitle()} not found.
-      </div>
-    );
-  }
 
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">✏️ Edit {getTitle()}</h1>
+        <h1 className="h2">➕ Create {getTitle()}</h1>
         <Link to={`/admin/master-data/${type}`} className="btn btn-sm btn-outline-secondary">
           <i className="bi bi-arrow-left"></i> Back to {getTitle()}s
         </Link>
@@ -293,20 +242,20 @@ function EditMasterDataPage() {
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={isSubmitting || updateMutation.isPending}
+                disabled={isSubmitting || createMutation.isPending}
               >
-                {isSubmitting || updateMutation.isPending ? (
+                {isSubmitting || createMutation.isPending ? (
                   <>
                     <span
                       className="spinner-border spinner-border-sm me-2"
                       role="status"
                       aria-hidden="true"
                     ></span>
-                    Saving...
+                    Creating...
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-save"></i> Save Changes
+                    <i className="bi bi-plus-circle"></i> Create {getTitle()}
                   </>
                 )}
               </button>
@@ -321,4 +270,4 @@ function EditMasterDataPage() {
   );
 }
 
-export default EditMasterDataPage;
+export default CreateMasterDataPage;

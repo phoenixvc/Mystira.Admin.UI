@@ -69,8 +69,11 @@ function BadgesPage() {
         <h1 className="h2">🏅 Badges</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link to="/admin/badges/import" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Import Badge
+            <Link to="/admin/badges/create" className="btn btn-sm btn-primary">
+              <i className="bi bi-plus-circle"></i> Create Badge
+            </Link>
+            <Link to="/admin/badges/import" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-upload"></i> Import Badge
             </Link>
           </div>
         </div>

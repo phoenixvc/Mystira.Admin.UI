@@ -172,15 +172,9 @@ function MasterDataPage() {
         </h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <button
-              className="btn btn-sm btn-primary"
-              onClick={() => {
-                // TODO: Implement create
-                showToast.info("Create functionality coming soon");
-              }}
-            >
+            <Link to={`/admin/master-data/${type}/create`} className="btn btn-sm btn-primary">
               <i className="bi bi-plus-circle"></i> Create
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -217,15 +211,12 @@ function MasterDataPage() {
                           <td>{config.getItemDescription(item)}</td>
                           <td>
                             <div className="btn-group btn-group-sm">
-                              <button
+                              <Link
+                                to={`/admin/master-data/${type}/edit/${id}`}
                                 className="btn btn-outline-primary"
-                                onClick={() => {
-                                  // TODO: Implement edit
-                                  showToast.info("Edit functionality coming soon");
-                                }}
                               >
                                 <i className="bi bi-pencil"></i> Edit
-                              </button>
+                              </Link>
                               <button
                                 className="btn btn-outline-danger"
                                 onClick={() => handleDelete(id)}
@@ -247,15 +238,9 @@ function MasterDataPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No {config.title.toLowerCase()} found.</p>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  // TODO: Implement create
-                  showToast.info("Create functionality coming soon");
-                }}
-              >
+              <Link to={`/admin/master-data/${type}/create`} className="btn btn-primary">
                 Create Your First {config.title.slice(0, -1)}
-              </button>
+              </Link>
             </div>
           )}
         </div>
