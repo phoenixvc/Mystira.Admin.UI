@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { scenariosApi } from "../api/scenarios";
+import ErrorAlert from "../components/ErrorAlert";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function ScenariosPage() {
   const [page, setPage] = useState(1);
@@ -56,10 +58,7 @@ function ScenariosPage() {
         <h1 className="h2">📚 Scenarios</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link
-              to="/admin/scenarios/import"
-              className="btn btn-sm btn-primary"
-            >
+            <Link to="/admin/scenarios/import" className="btn btn-sm btn-primary">
               <i className="bi bi-plus-circle"></i> Import Scenario
             </Link>
           </div>
@@ -76,7 +75,7 @@ function ScenariosPage() {
             className="form-control"
             placeholder="Search scenarios..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={e => {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
@@ -99,12 +98,10 @@ function ScenariosPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.scenarios.map((scenario) => (
+                    {data.scenarios.map(scenario => (
                       <tr key={scenario.id}>
                         <td>
-                          <Link to={`/admin/scenarios/edit/${scenario.id}`}>
-                            {scenario.title}
-                          </Link>
+                          <Link to={`/admin/scenarios/edit/${scenario.id}`}>{scenario.title}</Link>
                         </td>
                         <td>{scenario.ageRating}</td>
                         <td>
@@ -154,9 +151,7 @@ function ScenariosPage() {
                     </li>
                     <li
                       className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize)
-                          ? "disabled"
-                          : ""
+                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
                       }`}
                     >
                       <button

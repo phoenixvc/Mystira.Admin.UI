@@ -2,6 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { badgesApi } from "../api/badges";
+import ErrorAlert from "../components/ErrorAlert";
+import LoadingSpinner from "../components/LoadingSpinner";
+import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 
 function BadgesPage() {
   const [page, setPage] = useState(1);
@@ -36,23 +40,26 @@ function BadgesPage() {
     }
   };
 
+  const handleSearchReset = () => {
+    setSearchTerm("");
+    setPage(1);
+  };
+
   if (isLoading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading badges..." />;
   }
 
   if (error) {
     return (
-      <div className="alert alert-danger" role="alert">
-        Error loading badges: {error instanceof Error ? error.message : "Unknown error"}
-      </div>
+      <ErrorAlert
+        error={error}
+        title="Error loading badges"
+        onRetry={() => queryClient.invalidateQueries({ queryKey: ["badges"] })}
+      />
     );
   }
+
+  const totalPages = data ? Math.ceil(data.totalCount / pageSize) : 0;
 
   return (
     <div>
@@ -67,23 +74,15 @@ function BadgesPage() {
         </div>
       </div>
 
-      <div className="mb-3">
-        <div className="input-group">
-          <span className="input-group-text">
-            <i className="bi bi-search"></i>
-          </span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search badges..."
-            value={searchTerm}
-            onChange={e => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={value => {
+          setSearchTerm(value);
+          setPage(1);
+        }}
+        placeholder="Search badges..."
+        onSearchReset={handleSearchReset}
+      />
 
       <div className="card">
         <div className="card-body">
@@ -131,39 +130,7 @@ function BadgesPage() {
                 </table>
               </div>
 
-              {data.totalCount > pageSize && (
-                <nav>
-                  <ul className="pagination justify-content-center">
-                    <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-                      <button
-                        className="page-link"
-                        onClick={() => setPage(page - 1)}
-                        disabled={page === 1}
-                      >
-                        Previous
-                      </button>
-                    </li>
-                    <li className="page-item active">
-                      <span className="page-link">
-                        Page {page} of {Math.ceil(data.totalCount / pageSize)}
-                      </span>
-                    </li>
-                    <li
-                      className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
-                      }`}
-                    >
-                      <button
-                        className="page-link"
-                        onClick={() => setPage(page + 1)}
-                        disabled={page >= Math.ceil(data.totalCount / pageSize)}
-                      >
-                        Next
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              )}
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </>
           ) : (
             <div className="text-center py-5">
