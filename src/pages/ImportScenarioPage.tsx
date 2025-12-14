@@ -35,7 +35,7 @@ function ImportScenarioPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a file");
+      showToast.error("Please select a file");
       return;
     }
 

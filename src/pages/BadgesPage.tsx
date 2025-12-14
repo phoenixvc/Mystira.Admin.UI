@@ -6,6 +6,7 @@ import ErrorAlert from "../components/ErrorAlert";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
+import { showToast } from "../utils/toast";
 
 function BadgesPage() {
   const [page, setPage] = useState(1);
@@ -34,8 +35,9 @@ function BadgesPage() {
     if (window.confirm("Are you sure you want to delete this badge?")) {
       try {
         await deleteMutation.mutateAsync(id);
+        showToast.success("Badge deleted successfully");
       } catch (err) {
-        alert("Failed to delete badge");
+        showToast.error("Failed to delete badge");
       }
     }
   };
