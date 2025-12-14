@@ -24,7 +24,9 @@ export interface MediaQueryResponse {
 }
 
 export const mediaApi = {
-  getMedia: async (request?: MediaQueryRequest): Promise<MediaQueryResponse> => {
+  getMedia: async (
+    request?: MediaQueryRequest
+  ): Promise<MediaQueryResponse> => {
     const response = await apiClient.get<MediaQueryResponse>(
       "/api/admin/mediaadmin",
       { params: request }

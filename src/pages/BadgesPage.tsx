@@ -1,18 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { scenariosApi } from "../api/scenarios";
+import { badgesApi, Badge } from "../api/badges";
 
-function ScenariosPage() {
+function BadgesPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["scenarios", page, pageSize, searchTerm],
+    queryKey: ["badges", page, pageSize, searchTerm],
     queryFn: () =>
-      scenariosApi.getScenarios({
+      badgesApi.getBadges({
         page,
         pageSize,
         searchTerm: searchTerm || undefined,
@@ -20,18 +20,18 @@ function ScenariosPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => scenariosApi.deleteScenario(id),
+    mutationFn: (id: string) => badgesApi.deleteBadge(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scenarios"] });
+      queryClient.invalidateQueries({ queryKey: ["badges"] });
     },
   });
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this scenario?")) {
+    if (window.confirm("Are you sure you want to delete this badge?")) {
       try {
         await deleteMutation.mutateAsync(id);
       } catch (err) {
-        alert("Failed to delete scenario");
+        alert("Failed to delete badge");
       }
     }
   };
@@ -49,7 +49,7 @@ function ScenariosPage() {
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
-        Error loading scenarios:{" "}
+        Error loading badges:{" "}
         {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
@@ -58,14 +58,11 @@ function ScenariosPage() {
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">📚 Scenarios</h1>
+        <h1 className="h2">🏅 Badges</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link
-              to="/admin/scenarios/import"
-              className="btn btn-sm btn-primary"
-            >
-              <i className="bi bi-plus-circle"></i> Import Scenario
+            <Link to="/admin/badges/import" className="btn btn-sm btn-primary">
+              <i className="bi bi-plus-circle"></i> Import Badges
             </Link>
           </div>
         </div>
@@ -79,7 +76,7 @@ function ScenariosPage() {
           <input
             type="text"
             className="form-control"
-            placeholder="Search scenarios..."
+            placeholder="Search badges..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -91,43 +88,38 @@ function ScenariosPage() {
 
       <div className="card">
         <div className="card-body">
-          {data && data.scenarios.length > 0 ? (
+          {data && data.badges.length > 0 ? (
             <>
               <div className="table-responsive">
                 <table className="table table-hover">
                   <thead>
                     <tr>
-                      <th>Title</th>
-                      <th>Age Rating</th>
-                      <th>Tags</th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Image ID</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.scenarios.map((scenario) => (
-                      <tr key={scenario.id}>
-                        <td>
-                          <Link to={`/admin/scenarios/edit/${scenario.id}`}>
-                            {scenario.title}
-                          </Link>
-                        </td>
-                        <td>{scenario.ageRating}</td>
-                        <td>
-                          {scenario.tags && scenario.tags.length > 0
-                            ? scenario.tags.join(", ")
-                            : "-"}
-                        </td>
+                    {data.badges.map((badge) => (
+                      <tr key={badge.id}>
+                        <td>{badge.name}</td>
+                        <td>{badge.description || "-"}</td>
+                        <td>{badge.imageId || "-"}</td>
                         <td>
                           <div className="btn-group btn-group-sm">
-                            <Link
-                              to={`/admin/scenarios/edit/${scenario.id}`}
+                            <button
                               className="btn btn-outline-primary"
+                              onClick={() => {
+                                // TODO: Implement edit
+                                alert("Edit functionality coming soon");
+                              }}
                             >
                               <i className="bi bi-pencil"></i> Edit
-                            </Link>
+                            </button>
                             <button
                               className="btn btn-outline-danger"
-                              onClick={() => handleDelete(scenario.id)}
+                              onClick={() => handleDelete(badge.id)}
                               disabled={deleteMutation.isPending}
                             >
                               <i className="bi bi-trash"></i> Delete
@@ -178,9 +170,9 @@ function ScenariosPage() {
             </>
           ) : (
             <div className="text-center py-5">
-              <p className="text-muted">No scenarios found.</p>
-              <Link to="/admin/scenarios/import" className="btn btn-primary">
-                Import Your First Scenario
+              <p className="text-muted">No badges found.</p>
+              <Link to="/admin/badges/import" className="btn btn-primary">
+                Import Your First Badge
               </Link>
             </div>
           )}
@@ -190,4 +182,4 @@ function ScenariosPage() {
   );
 }
 
-export default ScenariosPage;
+export default BadgesPage;

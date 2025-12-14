@@ -1,6 +1,6 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { mediaApi, MediaAsset } from "../api/media";
+import { mediaApi } from "../api/media";
 
 function MediaPage() {
   const [page, setPage] = useState(1);
@@ -73,7 +73,8 @@ function MediaPage() {
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
-        Error loading media: {error instanceof Error ? error.message : "Unknown error"}
+        Error loading media:{" "}
+        {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
   }

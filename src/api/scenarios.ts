@@ -49,9 +49,7 @@ export const scenariosApi = {
     return response.data;
   },
 
-  createScenario: async (
-    request: CreateScenarioRequest
-  ): Promise<Scenario> => {
+  createScenario: async (request: CreateScenarioRequest): Promise<Scenario> => {
     const response = await apiClient.post<Scenario>(
       "/api/admin/scenariosadmin",
       request

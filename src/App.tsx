@@ -1,10 +1,13 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './Layout';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import ScenariosPage from './pages/ScenariosPage';
-import MediaPage from './pages/MediaPage';
-import ProtectedRoute from './ProtectedRoute';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import MediaPage from "./pages/MediaPage";
+import ScenariosPage from "./pages/ScenariosPage";
+import BadgesPage from "./pages/BadgesPage";
+import BundlesPage from "./pages/BundlesPage";
+import ImportScenarioPage from "./pages/ImportScenarioPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
@@ -22,7 +25,13 @@ function App() {
           <Route index element={<Navigate to="/admin" replace />} />
           <Route path="admin" element={<DashboardPage />} />
           <Route path="admin/scenarios" element={<ScenariosPage />} />
+          <Route
+            path="admin/scenarios/import"
+            element={<ImportScenarioPage />}
+          />
           <Route path="admin/media" element={<MediaPage />} />
+          <Route path="admin/badges" element={<BadgesPage />} />
+          <Route path="admin/bundles" element={<BundlesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

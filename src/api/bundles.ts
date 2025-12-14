@@ -40,19 +40,20 @@ export const bundlesApi = {
     return response.data;
   },
 
-  validateBundle: async (file: File): Promise<{ success: boolean; result: unknown }> => {
+  validateBundle: async (
+    file: File
+  ): Promise<{ success: boolean; result: unknown }> => {
     const formData = new FormData();
     formData.append("bundleFile", file);
 
-    const response = await apiClient.post<{ success: boolean; result: unknown }>(
-      "/admin/bundles/validate",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await apiClient.post<{
+      success: boolean;
+      result: unknown;
+    }>("/admin/bundles/validate", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 
@@ -66,15 +67,14 @@ export const bundlesApi = {
     formData.append("validateReferences", validateReferences.toString());
     formData.append("overwriteExisting", overwriteExisting.toString());
 
-    const response = await apiClient.post<{ success: boolean; result: unknown }>(
-      "/admin/bundles/upload",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await apiClient.post<{
+      success: boolean;
+      result: unknown;
+    }>("/admin/bundles/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 };

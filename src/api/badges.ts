@@ -22,7 +22,9 @@ export interface BadgeQueryResponse {
 }
 
 export const badgesApi = {
-  getBadges: async (request?: BadgeQueryRequest): Promise<BadgeQueryResponse> => {
+  getBadges: async (
+    request?: BadgeQueryRequest
+  ): Promise<BadgeQueryResponse> => {
     const response = await apiClient.get<BadgeQueryResponse>(
       "/api/admin/badges",
       { params: request }

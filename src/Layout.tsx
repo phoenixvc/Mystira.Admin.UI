@@ -47,6 +47,16 @@ function Layout() {
                     Media
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/badges">
+                    Badges
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/bundles">
+                    Bundles
+                  </Link>
+                </li>
               </ul>
               <ul className="navbar-nav">
                 <li className="nav-item">
