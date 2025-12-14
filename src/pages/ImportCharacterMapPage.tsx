@@ -18,7 +18,9 @@ function ImportCharacterMapPage() {
       navigate("/admin/character-maps");
     },
     onError: error => {
-      showToast.error(error instanceof Error ? error.message : "Failed to upload character map file");
+      showToast.error(
+        error instanceof Error ? error.message : "Failed to upload character map file"
+      );
       setUploading(false);
     },
   });

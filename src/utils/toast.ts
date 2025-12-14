@@ -31,7 +31,7 @@ export const showToast = {
     });
   },
 
-  promise: <T,>(
+  promise: <T>(
     promise: Promise<T>,
     messages: {
       loading: string;
