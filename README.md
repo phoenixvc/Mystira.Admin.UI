@@ -61,7 +61,11 @@ See [Migration Phases Documentation](../../docs/MIGRATION_PHASES.md) for detaile
     - ✅ Edit Badge
     - ✅ Edit Character Map
     - ✅ Edit Master Data (Age Groups, Archetypes, Compass Axes, Echo Types, Fantasy Themes)
-12. ⏳ Create forms (new entity creation)
+12. ✅ Create forms with React Hook Form + Zod validation:
+    - ✅ Create Scenario
+    - ✅ Create Badge
+    - ✅ Create Character Map
+    - ✅ Create Master Data (Age Groups, Archetypes, Compass Axes, Echo Types, Fantasy Themes)
 11. ⏳ Set up CI/CD pipeline
 12. ⏳ Deploy and verify functionality
 13. ⏳ Remove Admin UI from `Mystira.App` monorepo
