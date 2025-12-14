@@ -13,6 +13,7 @@ import {
   FantasyTheme,
   fantasyThemesApi,
 } from "../api/masterData";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import ErrorAlert from "../components/ErrorAlert";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
@@ -100,6 +101,10 @@ function MasterDataPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: string | null }>({
+    isOpen: false,
+    id: null,
+  });
   const queryClient = useQueryClient();
 
   if (!type || !(type in masterDataConfigs)) {
@@ -133,14 +138,23 @@ function MasterDataPage() {
     },
   });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm(`Are you sure you want to delete this ${config.title.toLowerCase()}?`)) {
+  const handleDeleteClick = (id: string) => {
+    setDeleteConfirm({ isOpen: true, id });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteConfirm.id) {
       try {
-        await deleteMutation.mutateAsync(id);
+        await deleteMutation.mutateAsync(deleteConfirm.id);
+        setDeleteConfirm({ isOpen: false, id: null });
       } catch (err) {
         // Error handled by onError callback
       }
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm({ isOpen: false, id: null });
   };
 
   const handleSearchReset = () => {
@@ -166,6 +180,16 @@ function MasterDataPage() {
 
   return (
     <div>
+      <ConfirmationDialog
+        isOpen={deleteConfirm.isOpen}
+        title={`Delete ${config.title.slice(0, -1)}`}
+        message={`Are you sure you want to delete this ${config.title.toLowerCase()}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        variant="danger"
+      />
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 className="h2">
           {config.icon} {config.title}
@@ -219,7 +243,7 @@ function MasterDataPage() {
                               </Link>
                               <button
                                 className="btn btn-outline-danger"
-                                onClick={() => handleDelete(id)}
+                                onClick={() => handleDeleteClick(id)}
                                 disabled={deleteMutation.isPending}
                               >
                                 <i className="bi bi-trash"></i> Delete
