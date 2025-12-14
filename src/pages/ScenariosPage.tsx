@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { scenariosApi } from "../api/scenarios";
 import ErrorAlert from "../components/ErrorAlert";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 
 function ScenariosPage() {
   const [page, setPage] = useState(1);
@@ -38,6 +40,11 @@ function ScenariosPage() {
     }
   };
 
+  const handleSearchReset = () => {
+    setSearchTerm("");
+    setPage(1);
+  };
+
   if (isLoading) {
     return <LoadingSpinner message="Loading scenarios..." />;
   }
@@ -52,6 +59,8 @@ function ScenariosPage() {
     );
   }
 
+  const totalPages = data ? Math.ceil(data.totalCount / pageSize) : 0;
+
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -65,23 +74,15 @@ function ScenariosPage() {
         </div>
       </div>
 
-      <div className="mb-3">
-        <div className="input-group">
-          <span className="input-group-text">
-            <i className="bi bi-search"></i>
-          </span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search scenarios..."
-            value={searchTerm}
-            onChange={e => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={value => {
+          setSearchTerm(value);
+          setPage(1);
+        }}
+        placeholder="Search scenarios..."
+        onSearchReset={handleSearchReset}
+      />
 
       <div className="card">
         <div className="card-body">
@@ -132,39 +133,7 @@ function ScenariosPage() {
                 </table>
               </div>
 
-              {data.totalCount > pageSize && (
-                <nav>
-                  <ul className="pagination justify-content-center">
-                    <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-                      <button
-                        className="page-link"
-                        onClick={() => setPage(page - 1)}
-                        disabled={page === 1}
-                      >
-                        Previous
-                      </button>
-                    </li>
-                    <li className="page-item active">
-                      <span className="page-link">
-                        Page {page} of {Math.ceil(data.totalCount / pageSize)}
-                      </span>
-                    </li>
-                    <li
-                      className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
-                      }`}
-                    >
-                      <button
-                        className="page-link"
-                        onClick={() => setPage(page + 1)}
-                        disabled={page >= Math.ceil(data.totalCount / pageSize)}
-                      >
-                        Next
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              )}
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </>
           ) : (
             <div className="text-center py-5">

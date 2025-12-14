@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { adminApi } from "../api/admin";
+import ErrorAlert from "../components/ErrorAlert";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function DashboardPage() {
   const [stats, setStats] = useState({
@@ -10,7 +12,7 @@ function DashboardPage() {
     totalBundles: 0,
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: () => adminApi.getStats(),
   });
@@ -22,9 +24,22 @@ function DashboardPage() {
   }, [data]);
 
   const handleRefresh = () => {
-    // Refresh stats
-    window.location.reload();
+    refetch();
   };
+
+  if (isLoading) {
+    return <LoadingSpinner message="Loading dashboard statistics..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorAlert
+        error={error}
+        title="Error loading dashboard"
+        onRetry={() => refetch()}
+      />
+    );
+  }
 
   return (
     <div>
