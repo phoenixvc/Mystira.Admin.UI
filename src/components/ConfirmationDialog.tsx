@@ -63,11 +63,7 @@ function ConfirmationDialog({
             <button type="button" className="btn btn-secondary" onClick={onCancel}>
               {cancelText}
             </button>
-            <button
-              type="button"
-              className={`btn ${variantClasses[variant]}`}
-              onClick={onConfirm}
-            >
+            <button type="button" className={`btn ${variantClasses[variant]}`} onClick={onConfirm}>
               {confirmText}
             </button>
           </div>
