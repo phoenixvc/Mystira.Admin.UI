@@ -1,23 +1,27 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { mediaApi } from "../api/media";
+import { useNavigate, Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { characterMapsApi } from "../api/characterMaps";
 
-function ImportMediaPage() {
+function ImportCharacterMapPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => mediaApi.uploadMedia(file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-      alert("Media uploaded successfully!");
-      navigate("/admin/media");
+    mutationFn: (file: File) => characterMapsApi.uploadCharacterMap(file),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["characterMaps"] });
+      alert(data.message || "Character map uploaded successfully!");
+      navigate("/admin/character-maps");
     },
-    onError: error => {
-      alert(error instanceof Error ? error.message : "Failed to upload media file");
+    onError: (error) => {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload character map file"
+      );
       setUploading(false);
     },
   });
@@ -47,9 +51,12 @@ function ImportMediaPage() {
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">📥 Import Media</h1>
-        <Link to="/admin/media" className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to Media
+        <h1 className="h2">📥 Import Character Map</h1>
+        <Link
+          to="/admin/character-maps"
+          className="btn btn-sm btn-outline-secondary"
+        >
+          <i className="bi bi-arrow-left"></i> Back to Character Maps
         </Link>
       </div>
 
@@ -57,30 +64,37 @@ function ImportMediaPage() {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="mediaFile" className="form-label">
-                Media File
+              <label htmlFor="characterMapFile" className="form-label">
+                Character Map File
               </label>
               <input
                 type="file"
                 className="form-control"
-                id="mediaFile"
+                id="characterMapFile"
                 onChange={handleFileChange}
                 disabled={uploading}
                 required
               />
-              <div className="form-text">Select an image, audio, or video file to upload</div>
+              <div className="form-text">
+                Select a character map file to upload
+              </div>
             </div>
 
             {file && (
               <div className="mb-3">
                 <div className="alert alert-info">
-                  <strong>Selected file:</strong> {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                  <strong>Selected file:</strong> {file.name} (
+                  {(file.size / 1024).toFixed(2)} KB)
                 </div>
               </div>
             )}
 
             <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-primary" disabled={!file || uploading}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={!file || uploading}
+              >
                 {uploading ? (
                   <>
                     <span
@@ -92,11 +106,11 @@ function ImportMediaPage() {
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-upload"></i> Upload Media
+                    <i className="bi bi-upload"></i> Upload Character Map
                   </>
                 )}
               </button>
-              <Link to="/admin/media" className="btn btn-secondary">
+              <Link to="/admin/character-maps" className="btn btn-secondary">
                 Cancel
               </Link>
             </div>
@@ -107,4 +121,4 @@ function ImportMediaPage() {
   );
 }
 
-export default ImportMediaPage;
+export default ImportCharacterMapPage;

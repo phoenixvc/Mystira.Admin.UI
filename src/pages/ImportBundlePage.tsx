@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { bundlesApi } from "../api/bundles";
 
 function ImportBundlePage() {
@@ -14,15 +14,13 @@ function ImportBundlePage() {
   const uploadMutation = useMutation({
     mutationFn: (file: File) =>
       bundlesApi.uploadBundle(file, validateReferences, overwriteExisting),
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ["bundles"] });
       alert(data.success ? "Bundle uploaded successfully!" : data.result);
       navigate("/admin/bundles");
     },
-    onError: (error) => {
-      alert(
-        error instanceof Error ? error.message : "Failed to upload bundle file"
-      );
+    onError: error => {
+      alert(error instanceof Error ? error.message : "Failed to upload bundle file");
       setUploading(false);
     },
   });
@@ -73,9 +71,7 @@ function ImportBundlePage() {
                 disabled={uploading}
                 required
               />
-              <div className="form-text">
-                Select a bundle file to upload and process
-              </div>
+              <div className="form-text">Select a bundle file to upload and process</div>
             </div>
 
             <div className="mb-3 form-check">
@@ -84,7 +80,7 @@ function ImportBundlePage() {
                 className="form-check-input"
                 id="validateReferences"
                 checked={validateReferences}
-                onChange={(e) => setValidateReferences(e.target.checked)}
+                onChange={e => setValidateReferences(e.target.checked)}
                 disabled={uploading}
               />
               <label className="form-check-label" htmlFor="validateReferences">
@@ -98,7 +94,7 @@ function ImportBundlePage() {
                 className="form-check-input"
                 id="overwriteExisting"
                 checked={overwriteExisting}
-                onChange={(e) => setOverwriteExisting(e.target.checked)}
+                onChange={e => setOverwriteExisting(e.target.checked)}
                 disabled={uploading}
               />
               <label className="form-check-label" htmlFor="overwriteExisting">
@@ -107,11 +103,7 @@ function ImportBundlePage() {
             </div>
 
             <div className="d-flex gap-2">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={!file || uploading}
-              >
+              <button type="submit" className="btn btn-primary" disabled={!file || uploading}>
                 {uploading ? (
                   <>
                     <span

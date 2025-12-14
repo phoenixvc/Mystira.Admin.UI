@@ -1,7 +1,7 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { bundlesApi, Bundle } from "../api/bundles";
+import { bundlesApi } from "../api/bundles";
 
 function BundlesPage() {
   const [page, setPage] = useState(1);
@@ -39,8 +39,7 @@ function BundlesPage() {
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
-        Error loading bundles:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
+        Error loading bundles: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
   }
@@ -68,7 +67,7 @@ function BundlesPage() {
             className="form-control"
             placeholder="Search bundles..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={e => {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
@@ -91,7 +90,7 @@ function BundlesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.bundles.map((bundle) => (
+                    {data.bundles.map(bundle => (
                       <tr key={bundle.id}>
                         <td>{bundle.name}</td>
                         <td>{bundle.description || "-"}</td>
@@ -140,9 +139,7 @@ function BundlesPage() {
                     </li>
                     <li
                       className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize)
-                          ? "disabled"
-                          : ""
+                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
                       }`}
                     >
                       <button

@@ -1,14 +1,14 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
+import BadgesPage from "./pages/BadgesPage";
+import BundlesPage from "./pages/BundlesPage";
 import DashboardPage from "./pages/DashboardPage";
+import ImportBundlePage from "./pages/ImportBundlePage";
+import ImportMediaPage from "./pages/ImportMediaPage";
+import ImportScenarioPage from "./pages/ImportScenarioPage";
 import LoginPage from "./pages/LoginPage";
 import MediaPage from "./pages/MediaPage";
 import ScenariosPage from "./pages/ScenariosPage";
-import BadgesPage from "./pages/BadgesPage";
-import BundlesPage from "./pages/BundlesPage";
-import ImportScenarioPage from "./pages/ImportScenarioPage";
-import ImportMediaPage from "./pages/ImportMediaPage";
-import ImportBundlePage from "./pages/ImportBundlePage";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
@@ -27,15 +27,17 @@ function App() {
           <Route index element={<Navigate to="/admin" replace />} />
           <Route path="admin" element={<DashboardPage />} />
           <Route path="admin/scenarios" element={<ScenariosPage />} />
-          <Route
-            path="admin/scenarios/import"
-            element={<ImportScenarioPage />}
-          />
+          <Route path="admin/scenarios/import" element={<ImportScenarioPage />} />
           <Route path="admin/media" element={<MediaPage />} />
           <Route path="admin/media/import" element={<ImportMediaPage />} />
           <Route path="admin/badges" element={<BadgesPage />} />
           <Route path="admin/bundles" element={<BundlesPage />} />
           <Route path="admin/bundles/import" element={<ImportBundlePage />} />
+          <Route path="admin/character-maps" element={<CharacterMapsPage />} />
+          <Route
+            path="admin/character-maps/import"
+            element={<ImportCharacterMapPage />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

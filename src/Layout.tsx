@@ -57,6 +57,11 @@ function Layout() {
                     Bundles
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/character-maps">
+                    Character Maps
+                  </Link>
+                </li>
               </ul>
               <ul className="navbar-nav">
                 <li className="nav-item">

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { mediaApi } from "../api/media";
 
 function MediaPage() {
@@ -36,7 +36,6 @@ function MediaPage() {
     }
   };
 
-
   if (isLoading) {
     return (
       <div className="text-center py-5">
@@ -50,8 +49,7 @@ function MediaPage() {
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
-        Error loading media:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
+        Error loading media: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
   }
@@ -79,7 +77,7 @@ function MediaPage() {
             className="form-control"
             placeholder="Search media..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={e => {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
@@ -102,15 +100,11 @@ function MediaPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.media.map((media) => (
+                    {data.media.map(media => (
                       <tr key={media.id}>
                         <td>{media.fileName}</td>
                         <td>{media.contentType}</td>
-                        <td>
-                          {media.size
-                            ? `${(media.size / 1024).toFixed(2)} KB`
-                            : "-"}
-                        </td>
+                        <td>{media.size ? `${(media.size / 1024).toFixed(2)} KB` : "-"}</td>
                         <td>
                           <div className="btn-group btn-group-sm">
                             <a
@@ -155,9 +149,7 @@ function MediaPage() {
                     </li>
                     <li
                       className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize)
-                          ? "disabled"
-                          : ""
+                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
                       }`}
                     >
                       <button

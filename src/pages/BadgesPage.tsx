@@ -1,7 +1,7 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { badgesApi, Badge } from "../api/badges";
+import { badgesApi } from "../api/badges";
 
 function BadgesPage() {
   const [page, setPage] = useState(1);
@@ -49,8 +49,7 @@ function BadgesPage() {
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
-        Error loading badges:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
+        Error loading badges: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
   }
@@ -78,7 +77,7 @@ function BadgesPage() {
             className="form-control"
             placeholder="Search badges..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={e => {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
@@ -101,7 +100,7 @@ function BadgesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.badges.map((badge) => (
+                    {data.badges.map(badge => (
                       <tr key={badge.id}>
                         <td>{badge.name}</td>
                         <td>{badge.description || "-"}</td>
@@ -151,9 +150,7 @@ function BadgesPage() {
                     </li>
                     <li
                       className={`page-item ${
-                        page >= Math.ceil(data.totalCount / pageSize)
-                          ? "disabled"
-                          : ""
+                        page >= Math.ceil(data.totalCount / pageSize) ? "disabled" : ""
                       }`}
                     >
                       <button

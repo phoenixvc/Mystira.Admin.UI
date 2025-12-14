@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { scenariosApi } from "../api/scenarios";
 
 function ImportScenarioPage() {
@@ -10,18 +10,13 @@ function ImportScenarioPage() {
   const navigate = useNavigate();
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) =>
-      scenariosApi.uploadScenario(file, overwriteExisting),
-    onSuccess: (data) => {
+    mutationFn: (file: File) => scenariosApi.uploadScenario(file, overwriteExisting),
+    onSuccess: data => {
       alert(data.message || "Scenario uploaded successfully!");
       navigate("/admin/scenarios");
     },
-    onError: (error) => {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Failed to upload scenario file"
-      );
+    onError: error => {
+      alert(error instanceof Error ? error.message : "Failed to upload scenario file");
       setUploading(false);
     },
   });
@@ -29,10 +24,7 @@ function ImportScenarioPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (
-        !selectedFile.name.endsWith(".yaml") &&
-        !selectedFile.name.endsWith(".yml")
-      ) {
+      if (!selectedFile.name.endsWith(".yaml") && !selectedFile.name.endsWith(".yml")) {
         alert("Please select a .yaml or .yml file");
         return;
       }
@@ -80,9 +72,7 @@ function ImportScenarioPage() {
                 disabled={uploading}
                 required
               />
-              <div className="form-text">
-                Select a YAML file containing scenario definition
-              </div>
+              <div className="form-text">Select a YAML file containing scenario definition</div>
             </div>
 
             <div className="mb-3 form-check">
@@ -91,7 +81,7 @@ function ImportScenarioPage() {
                 className="form-check-input"
                 id="overwriteExisting"
                 checked={overwriteExisting}
-                onChange={(e) => setOverwriteExisting(e.target.checked)}
+                onChange={e => setOverwriteExisting(e.target.checked)}
                 disabled={uploading}
               />
               <label className="form-check-label" htmlFor="overwriteExisting">
@@ -100,11 +90,7 @@ function ImportScenarioPage() {
             </div>
 
             <div className="d-flex gap-2">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={!file || uploading}
-              >
+              <button type="submit" className="btn btn-primary" disabled={!file || uploading}>
                 {uploading ? (
                   <>
                     <span
