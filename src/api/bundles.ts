@@ -1,0 +1,80 @@
+import { apiClient } from "./client";
+
+export interface Bundle {
+  id: string;
+  name: string;
+  description?: string;
+  version?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface BundleQueryRequest {
+  page?: number;
+  pageSize?: number;
+  searchTerm?: string;
+}
+
+export interface BundleQueryResponse {
+  bundles: Bundle[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export const bundlesApi = {
+  getBundles: async (
+    request?: BundleQueryRequest
+  ): Promise<BundleQueryResponse> => {
+    const response = await apiClient.get<BundleQueryResponse>(
+      "/api/admin/bundlesadmin",
+      { params: request }
+    );
+    return response.data;
+  },
+
+  getBundle: async (id: string): Promise<Bundle> => {
+    const response = await apiClient.get<Bundle>(
+      `/api/admin/bundlesadmin/${id}`
+    );
+    return response.data;
+  },
+
+  validateBundle: async (file: File): Promise<{ success: boolean; result: unknown }> => {
+    const formData = new FormData();
+    formData.append("bundleFile", file);
+
+    const response = await apiClient.post<{ success: boolean; result: unknown }>(
+      "/admin/bundles/validate",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  },
+
+  uploadBundle: async (
+    file: File,
+    validateReferences = true,
+    overwriteExisting = false
+  ): Promise<{ success: boolean; result: unknown }> => {
+    const formData = new FormData();
+    formData.append("bundleFile", file);
+    formData.append("validateReferences", validateReferences.toString());
+    formData.append("overwriteExisting", overwriteExisting.toString());
+
+    const response = await apiClient.post<{ success: boolean; result: unknown }>(
+      "/admin/bundles/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  },
+};

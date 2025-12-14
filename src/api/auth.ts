@@ -1,29 +1,24 @@
 import { apiClient } from "./client";
 
 export interface LoginRequest {
-  email: string;
-  password: string;
+  Username: string;
+  Password: string;
 }
 
 export interface LoginResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  Message: string;
 }
 
 export const authApi = {
-  login: async (email: string, password: string): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>("/admin/auth/login", {
-      email,
-      password,
+  login: async (username: string, password: string): Promise<{ Message: string }> => {
+    const response = await apiClient.post<{ Message: string }>("/api/auth/login", {
+      Username: username,
+      Password: password,
     });
     return response.data;
   },
 
   logout: async (): Promise<void> => {
-    await apiClient.post("/admin/auth/logout");
+    await apiClient.post("/api/auth/logout");
   },
 };

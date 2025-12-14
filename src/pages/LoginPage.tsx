@@ -1,27 +1,28 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authApi } from '../api/auth';
-import { useAuthStore } from '../state/authStore';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authApi } from "../api/auth";
+import { useAuthStore } from "../state/authStore";
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       const result = await authApi.login(email, password);
-      login(result.token);
-      navigate('/admin');
+      // Cookie-based auth - no token needed, just mark as authenticated
+      login("authenticated"); // Use placeholder token for state management
+      navigate("/admin");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -71,7 +72,7 @@ function LoginPage() {
                   className="btn btn-primary w-100"
                   disabled={loading}
                 >
-                  {loading ? 'Logging in...' : 'Login'}
+                  {loading ? "Logging in..." : "Login"}
                 </button>
               </form>
             </div>

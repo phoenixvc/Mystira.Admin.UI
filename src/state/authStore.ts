@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface AuthState {
   token: string | null;
@@ -10,7 +10,7 @@ interface AuthState {
 // Simple localStorage-based persistence
 const loadAuthFromStorage = (): { token: string | null } => {
   try {
-    const stored = localStorage.getItem('auth-storage');
+    const stored = localStorage.getItem("auth-storage");
     if (stored) {
       const parsed = JSON.parse(stored);
       return { token: parsed.token || null };
@@ -23,7 +23,7 @@ const loadAuthFromStorage = (): { token: string | null } => {
 
 const saveAuthToStorage = (token: string | null) => {
   try {
-    localStorage.setItem('auth-storage', JSON.stringify({ token }));
+    localStorage.setItem("auth-storage", JSON.stringify({ token }));
   } catch {
     // Ignore errors
   }
@@ -39,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ token, isAuthenticated: true });
   },
   logout: () => {
-    localStorage.removeItem('auth-storage');
+    localStorage.removeItem("auth-storage");
     set({ token: null, isAuthenticated: false });
   },
 }));

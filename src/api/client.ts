@@ -12,13 +12,11 @@ export const apiClient = axios.create({
   withCredentials: true, // Important for cookie-based auth
 });
 
-// Request interceptor to add auth token if available
+// Request interceptor - cookies are handled automatically by browser
+// No need to add Authorization header for cookie-based auth
 apiClient.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Cookies are sent automatically with withCredentials: true
     return config;
   },
   (error) => {
