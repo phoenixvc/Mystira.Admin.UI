@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { badgesApi } from "../api/badges";
+import { showToast } from "../utils/toast";
 
 function ImportBadgePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -34,7 +35,7 @@ function ImportBadgePage() {
     if (selectedFile) {
       // Badge files are typically images
       if (!selectedFile.type.startsWith("image/")) {
-        alert("Please select an image file");
+        showToast.error("Please select an image file");
         return;
       }
       setFile(selectedFile);
@@ -44,7 +45,7 @@ function ImportBadgePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a file");
+      showToast.error("Please select a file");
       return;
     }
 

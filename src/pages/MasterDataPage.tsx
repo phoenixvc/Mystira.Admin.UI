@@ -15,6 +15,7 @@ import {
 } from "../api/masterData";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
+import { showToast } from "../utils/toast";
 
 type MasterDataType =
   | "age-groups"
@@ -130,8 +131,9 @@ function MasterDataPage() {
     if (window.confirm(`Are you sure you want to delete this ${config.title.toLowerCase()}?`)) {
       try {
         await deleteMutation.mutateAsync(id);
+        showToast.success(`${config.title.slice(0, -1)} deleted successfully`);
       } catch (err) {
-        alert(`Failed to delete ${config.title.toLowerCase()}`);
+        showToast.error(`Failed to delete ${config.title.toLowerCase()}`);
       }
     }
   };
@@ -174,7 +176,7 @@ function MasterDataPage() {
               className="btn btn-sm btn-primary"
               onClick={() => {
                 // TODO: Implement create
-                alert("Create functionality coming soon");
+                showToast.info("Create functionality coming soon");
               }}
             >
               <i className="bi bi-plus-circle"></i> Create
@@ -219,7 +221,7 @@ function MasterDataPage() {
                                 className="btn btn-outline-primary"
                                 onClick={() => {
                                   // TODO: Implement edit
-                                  alert("Edit functionality coming soon");
+                                  showToast.info("Edit functionality coming soon");
                                 }}
                               >
                                 <i className="bi bi-pencil"></i> Edit
@@ -249,7 +251,7 @@ function MasterDataPage() {
                 className="btn btn-primary"
                 onClick={() => {
                   // TODO: Implement create
-                  alert("Create functionality coming soon");
+                  showToast.info("Create functionality coming soon");
                 }}
               >
                 Create Your First {config.title.slice(0, -1)}

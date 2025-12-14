@@ -114,7 +114,7 @@ function CharacterMapsPage() {
                               className="btn btn-outline-primary"
                               onClick={() => {
                                 // TODO: Implement edit
-                                alert("Edit functionality coming soon");
+                                showToast.info("Edit functionality coming soon");
                               }}
                             >
                               <i className="bi bi-pencil"></i> Edit

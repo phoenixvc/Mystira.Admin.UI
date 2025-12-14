@@ -26,7 +26,7 @@ function BundlesPage() {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this bundle?")) {
       // TODO: Implement delete when API endpoint is available
-      alert("Delete functionality coming soon");
+      showToast.info("Delete functionality coming soon");
     }
   };
 
@@ -100,7 +100,7 @@ function BundlesPage() {
                               className="btn btn-outline-primary"
                               onClick={() => {
                                 // TODO: Implement view/edit
-                                alert("View/Edit functionality coming soon");
+                                showToast.info("View/Edit functionality coming soon");
                               }}
                             >
                               <i className="bi bi-eye"></i> View
