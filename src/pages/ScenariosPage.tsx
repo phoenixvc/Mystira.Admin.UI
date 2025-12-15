@@ -49,7 +49,7 @@ function ScenariosPage() {
       try {
         await deleteMutation.mutateAsync(deleteConfirm.id);
         setDeleteConfirm({ isOpen: false, id: null });
-      } catch (err) {
+      } catch (_err) {
         // Error handled by onError callback
       }
     }
