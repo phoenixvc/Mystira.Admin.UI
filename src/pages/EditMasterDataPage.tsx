@@ -246,7 +246,7 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as any).minAge?.message}
+                  error={(errors as Record<string, { message?: string } | undefined>).minAge?.message}
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -259,7 +259,7 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as any).maxAge?.message}
+                  error={(errors as Record<string, { message?: string } | undefined>).maxAge?.message}
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput
@@ -276,7 +276,10 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Positive Label"
-                  error={(errors as any).positiveLabel?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).positiveLabel
+                      ?.message
+                  }
                   helpText="Label for the positive end of the axis"
                 >
                   <TextInput id="positiveLabel" {...register("positiveLabel")} />
@@ -284,7 +287,10 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Negative Label"
-                  error={(errors as any).negativeLabel?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).negativeLabel
+                      ?.message
+                  }
                   helpText="Label for the negative end of the axis"
                 >
                   <TextInput id="negativeLabel" {...register("negativeLabel")} />
