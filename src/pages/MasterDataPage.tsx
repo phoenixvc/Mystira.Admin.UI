@@ -107,6 +107,37 @@ function MasterDataPage() {
   });
   const queryClient = useQueryClient();
 
+  const config = type && type in masterDataConfigs ? masterDataConfigs[type] : null;
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [type, page, pageSize, searchTerm],
+    queryFn: () => {
+      if (!config) throw new Error("Invalid config");
+      return config.api.getItems({
+        page,
+        pageSize,
+        searchTerm: searchTerm || undefined,
+      });
+    },
+    enabled: !!config,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => {
+      if (!config) throw new Error("Invalid config");
+      return config.api.deleteItem(id);
+    },
+    onSuccess: () => {
+      if (!type || !config) return;
+      queryClient.invalidateQueries({ queryKey: [type] });
+      showToast.success(`${config.title.slice(0, -1)} deleted successfully`);
+    },
+    onError: () => {
+      if (!config) return;
+      showToast.error(`Failed to delete ${config.title.toLowerCase()}`);
+    },
+  });
+
   if (!type || !(type in masterDataConfigs)) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -114,29 +145,6 @@ function MasterDataPage() {
       </div>
     );
   }
-
-  const config = masterDataConfigs[type];
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: [type, page, pageSize, searchTerm],
-    queryFn: () =>
-      config.api.getItems({
-        page,
-        pageSize,
-        searchTerm: searchTerm || undefined,
-      }),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => config.api.deleteItem(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [type] });
-      showToast.success(`${config.title.slice(0, -1)} deleted successfully`);
-    },
-    onError: () => {
-      showToast.error(`Failed to delete ${config.title.toLowerCase()}`);
-    },
-  });
 
   const handleDeleteClick = (id: string) => {
     setDeleteConfirm({ isOpen: true, id });
@@ -147,7 +155,7 @@ function MasterDataPage() {
       try {
         await deleteMutation.mutateAsync(deleteConfirm.id);
         setDeleteConfirm({ isOpen: false, id: null });
-      } catch (err) {
+      } catch {
         // Error handled by onError callback
       }
     }
@@ -163,14 +171,14 @@ function MasterDataPage() {
   };
 
   if (isLoading) {
-    return <LoadingSpinner message={`Loading ${config.title.toLowerCase()}...`} />;
+    return <LoadingSpinner message={`Loading ${config!.title.toLowerCase()}...`} />;
   }
 
   if (error) {
     return (
       <ErrorAlert
         error={error}
-        title={`Error loading ${config.title.toLowerCase()}`}
+        title={`Error loading ${config!.title.toLowerCase()}`}
         onRetry={() => queryClient.invalidateQueries({ queryKey: [type] })}
       />
     );
@@ -182,8 +190,8 @@ function MasterDataPage() {
     <div>
       <ConfirmationDialog
         isOpen={deleteConfirm.isOpen}
-        title={`Delete ${config.title.slice(0, -1)}`}
-        message={`Are you sure you want to delete this ${config.title.toLowerCase()}? This action cannot be undone.`}
+        title={`Delete ${config!.title.slice(0, -1)}`}
+        message={`Are you sure you want to delete this ${config!.title.toLowerCase()}? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         onConfirm={handleDeleteConfirm}
@@ -192,7 +200,7 @@ function MasterDataPage() {
       />
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 className="h2">
-          {config.icon} {config.title}
+          {config!.icon} {config!.title}
         </h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
@@ -209,7 +217,7 @@ function MasterDataPage() {
           setSearchTerm(value);
           setPage(1);
         }}
-        placeholder={`Search ${config.title.toLowerCase()}...`}
+        placeholder={`Search ${config!.title.toLowerCase()}...`}
         onSearchReset={handleSearchReset}
       />
 
@@ -231,8 +239,8 @@ function MasterDataPage() {
                       const id = (item as { id: string }).id;
                       return (
                         <tr key={id}>
-                          <td>{config.getItemName(item)}</td>
-                          <td>{config.getItemDescription(item)}</td>
+                          <td>{config!.getItemName(item)}</td>
+                          <td>{config!.getItemDescription(item)}</td>
                           <td>
                             <div className="btn-group btn-group-sm">
                               <Link
@@ -261,9 +269,9 @@ function MasterDataPage() {
             </>
           ) : (
             <div className="text-center py-5">
-              <p className="text-muted">No {config.title.toLowerCase()} found.</p>
+              <p className="text-muted">No {config!.title.toLowerCase()} found.</p>
               <Link to={`/admin/master-data/${type}/create`} className="btn btn-primary">
-                Create Your First {config.title.slice(0, -1)}
+                Create Your First {config!.title.slice(0, -1)}
               </Link>
             </div>
           )}

@@ -73,18 +73,8 @@ function EditMasterDataPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
-
   const getSchema = () => {
+    if (!type) return null;
     switch (type) {
       case "age-groups":
         return ageGroupSchema;
@@ -96,10 +86,13 @@ function EditMasterDataPage() {
         return echoTypeSchema;
       case "fantasy-themes":
         return fantasyThemeSchema;
+      default:
+        return null;
     }
   };
 
   const getTitle = () => {
+    if (!type) return "";
     switch (type) {
       case "age-groups":
         return "Age Group";
@@ -111,10 +104,13 @@ function EditMasterDataPage() {
         return "Echo Type";
       case "fantasy-themes":
         return "Fantasy Theme";
+      default:
+        return "";
     }
   };
 
   const getApi = () => {
+    if (!type) return null;
     switch (type) {
       case "age-groups":
         return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
@@ -129,10 +125,13 @@ function EditMasterDataPage() {
           get: fantasyThemesApi.getFantasyTheme,
           update: fantasyThemesApi.updateFantasyTheme,
         };
+      default:
+        return null;
     }
   };
 
   const getDefaultValues = (): FormData => {
+    if (!type) return { name: "", description: "" };
     switch (type) {
       case "age-groups":
         return { name: "", description: "", minAge: undefined, maxAge: undefined };
@@ -143,6 +142,8 @@ function EditMasterDataPage() {
       case "echo-types":
         return { name: "", description: "" };
       case "fantasy-themes":
+        return { name: "", description: "" };
+      default:
         return { name: "", description: "" };
     }
   };
@@ -156,7 +157,7 @@ function EditMasterDataPage() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: getDefaultValues(),
   });
 
@@ -166,15 +167,20 @@ function EditMasterDataPage() {
     error,
   } = useQuery({
     queryKey: [type, id],
-    queryFn: () => api.get(id!),
-    enabled: !!id,
+    queryFn: () => {
+      if (!api || !id) throw new Error("Invalid API or ID");
+      return api.get(id);
+    },
+    enabled: !!id && !!api && !!type && ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type),
   });
 
   const updateMutation = useMutation({
     mutationFn: (data: FormData) => {
-      return api.update(id!, data);
+      if (!api || !id) throw new Error("Invalid API or ID");
+      return api.update(id, data);
     },
     onSuccess: () => {
+      if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
       queryClient.invalidateQueries({ queryKey: [type, id] });
       showToast.success(`${getTitle()} updated successfully!`);
@@ -192,6 +198,17 @@ function EditMasterDataPage() {
       reset(item as FormData);
     }
   }, [item, reset]);
+
+  if (
+    !type ||
+    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
+  ) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
 
   const onSubmit = async (data: FormData) => {
     await updateMutation.mutateAsync(data);
@@ -243,7 +260,7 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as any).minAge?.message}
+                  error={(errors as Record<string, { message?: string }>).minAge?.message}
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -256,7 +273,7 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as any).maxAge?.message}
+                  error={(errors as Record<string, { message?: string }>).maxAge?.message}
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput
@@ -273,7 +290,7 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Positive Label"
-                  error={(errors as any).positiveLabel?.message}
+                  error={(errors as Record<string, { message?: string }>).positiveLabel?.message}
                   helpText="Label for the positive end of the axis"
                 >
                   <TextInput id="positiveLabel" {...register("positiveLabel")} />
@@ -281,7 +298,7 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Negative Label"
-                  error={(errors as any).negativeLabel?.message}
+                  error={(errors as Record<string, { message?: string }>).negativeLabel?.message}
                   helpText="Label for the negative end of the axis"
                 >
                   <TextInput id="negativeLabel" {...register("negativeLabel")} />

@@ -70,18 +70,8 @@ function CreateMasterDataPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
-
   const getSchema = () => {
+    if (!type) return null;
     switch (type) {
       case "age-groups":
         return ageGroupSchema;
@@ -93,10 +83,13 @@ function CreateMasterDataPage() {
         return echoTypeSchema;
       case "fantasy-themes":
         return fantasyThemeSchema;
+      default:
+        return null;
     }
   };
 
   const getTitle = () => {
+    if (!type) return "";
     switch (type) {
       case "age-groups":
         return "Age Group";
@@ -108,10 +101,13 @@ function CreateMasterDataPage() {
         return "Echo Type";
       case "fantasy-themes":
         return "Fantasy Theme";
+      default:
+        return "";
     }
   };
 
   const getApi = () => {
+    if (!type) return null;
     switch (type) {
       case "age-groups":
         return ageGroupsApi.createAgeGroup;
@@ -123,10 +119,13 @@ function CreateMasterDataPage() {
         return echoTypesApi.createEchoType;
       case "fantasy-themes":
         return fantasyThemesApi.createFantasyTheme;
+      default:
+        return null;
     }
   };
 
   const getDefaultValues = (): FormData => {
+    if (!type) return { name: "", description: "" };
     switch (type) {
       case "age-groups":
         return { name: "", description: "", minAge: undefined, maxAge: undefined };
@@ -137,6 +136,8 @@ function CreateMasterDataPage() {
       case "echo-types":
         return { name: "", description: "" };
       case "fantasy-themes":
+        return { name: "", description: "" };
+      default:
         return { name: "", description: "" };
     }
   };
@@ -149,15 +150,17 @@ function CreateMasterDataPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: getDefaultValues(),
   });
 
   const createMutation = useMutation({
     mutationFn: (data: FormData) => {
+      if (!api) throw new Error("Invalid API");
       return api(data);
     },
     onSuccess: () => {
+      if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
       showToast.success(`${getTitle()} created successfully!`);
       navigate(`/admin/master-data/${type}`);
@@ -168,6 +171,17 @@ function CreateMasterDataPage() {
       );
     },
   });
+
+  if (
+    !type ||
+    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
+  ) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
 
   const onSubmit = async (data: FormData) => {
     await createMutation.mutateAsync(data);
@@ -197,7 +211,7 @@ function CreateMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as any).minAge?.message}
+                  error={(errors as Record<string, { message?: string }>).minAge?.message}
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -210,7 +224,7 @@ function CreateMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as any).maxAge?.message}
+                  error={(errors as Record<string, { message?: string }>).maxAge?.message}
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput
@@ -227,7 +241,7 @@ function CreateMasterDataPage() {
               <>
                 <FormField
                   label="Positive Label"
-                  error={(errors as any).positiveLabel?.message}
+                  error={(errors as Record<string, { message?: string }>).positiveLabel?.message}
                   helpText="Label for the positive end of the axis"
                 >
                   <TextInput id="positiveLabel" {...register("positiveLabel")} />
@@ -235,7 +249,7 @@ function CreateMasterDataPage() {
 
                 <FormField
                   label="Negative Label"
-                  error={(errors as any).negativeLabel?.message}
+                  error={(errors as Record<string, { message?: string }>).negativeLabel?.message}
                   helpText="Label for the negative end of the axis"
                 >
                   <TextInput id="negativeLabel" {...register("negativeLabel")} />
