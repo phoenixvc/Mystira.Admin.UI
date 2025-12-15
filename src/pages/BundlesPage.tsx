@@ -49,7 +49,7 @@ function BundlesPage() {
       try {
         await deleteMutation.mutateAsync(deleteConfirm.id);
         setDeleteConfirm({ isOpen: false, id: null });
-      } catch (_err) {
+      } catch {
         // Error handled by onError callback
       }
     }
