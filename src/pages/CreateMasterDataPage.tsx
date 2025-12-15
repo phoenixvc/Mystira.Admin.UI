@@ -65,84 +65,82 @@ type FormData =
   | EchoTypeFormData
   | FantasyThemeFormData;
 
+const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
+
+function getSchema(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return ageGroupSchema;
+    case "archetypes":
+      return archetypeSchema;
+    case "compass-axes":
+      return compassAxisSchema;
+    case "echo-types":
+      return echoTypeSchema;
+    case "fantasy-themes":
+      return fantasyThemeSchema;
+    default:
+      return archetypeSchema; // Default schema for invalid types
+  }
+}
+
+function getTitle(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return "Age Group";
+    case "archetypes":
+      return "Archetype";
+    case "compass-axes":
+      return "Compass Axis";
+    case "echo-types":
+      return "Echo Type";
+    case "fantasy-themes":
+      return "Fantasy Theme";
+    default:
+      return "Item";
+  }
+}
+
+function getApi(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return ageGroupsApi.createAgeGroup;
+    case "archetypes":
+      return archetypesApi.createArchetype;
+    case "compass-axes":
+      return compassAxesApi.createCompassAxis;
+    case "echo-types":
+      return echoTypesApi.createEchoType;
+    case "fantasy-themes":
+      return fantasyThemesApi.createFantasyTheme;
+    default:
+      return archetypesApi.createArchetype; // Default for invalid types
+  }
+}
+
+function getDefaultValues(type: MasterDataType | undefined): FormData {
+  switch (type) {
+    case "age-groups":
+      return { name: "", description: "", minAge: undefined, maxAge: undefined };
+    case "compass-axes":
+      return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
+    case "archetypes":
+    case "echo-types":
+    case "fantasy-themes":
+    default:
+      return { name: "", description: "" };
+  }
+}
+
 function CreateMasterDataPage() {
   const { type } = useParams<{ type: MasterDataType }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
-
-  const getSchema = () => {
-    switch (type) {
-      case "age-groups":
-        return ageGroupSchema;
-      case "archetypes":
-        return archetypeSchema;
-      case "compass-axes":
-        return compassAxisSchema;
-      case "echo-types":
-        return echoTypeSchema;
-      case "fantasy-themes":
-        return fantasyThemeSchema;
-    }
-  };
-
-  const getTitle = () => {
-    switch (type) {
-      case "age-groups":
-        return "Age Group";
-      case "archetypes":
-        return "Archetype";
-      case "compass-axes":
-        return "Compass Axis";
-      case "echo-types":
-        return "Echo Type";
-      case "fantasy-themes":
-        return "Fantasy Theme";
-    }
-  };
-
-  const getApi = () => {
-    switch (type) {
-      case "age-groups":
-        return ageGroupsApi.createAgeGroup;
-      case "archetypes":
-        return archetypesApi.createArchetype;
-      case "compass-axes":
-        return compassAxesApi.createCompassAxis;
-      case "echo-types":
-        return echoTypesApi.createEchoType;
-      case "fantasy-themes":
-        return fantasyThemesApi.createFantasyTheme;
-    }
-  };
-
-  const getDefaultValues = (): FormData => {
-    switch (type) {
-      case "age-groups":
-        return { name: "", description: "", minAge: undefined, maxAge: undefined };
-      case "archetypes":
-        return { name: "", description: "" };
-      case "compass-axes":
-        return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
-      case "echo-types":
-        return { name: "", description: "" };
-      case "fantasy-themes":
-        return { name: "", description: "" };
-    }
-  };
-
-  const api = getApi();
-  const schema = getSchema();
+  const isValidType = type && validTypes.includes(type);
+  const api = getApi(type);
+  const schema = getSchema(type);
+  const title = getTitle(type);
 
   const {
     register,
@@ -150,7 +148,7 @@ function CreateMasterDataPage() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(type),
   });
 
   const createMutation = useMutation({
@@ -159,12 +157,12 @@ function CreateMasterDataPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [type] });
-      showToast.success(`${getTitle()} created successfully!`);
+      showToast.success(`${title} created successfully!`);
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
       showToast.error(
-        error instanceof Error ? error.message : `Failed to create ${getTitle().toLowerCase()}`
+        error instanceof Error ? error.message : `Failed to create ${title.toLowerCase()}`
       );
     },
   });
@@ -173,12 +171,20 @@ function CreateMasterDataPage() {
     await createMutation.mutateAsync(data);
   };
 
+  if (!isValidType) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">➕ Create {getTitle()}</h1>
+        <h1 className="h2">➕ Create {title}</h1>
         <Link to={`/admin/master-data/${type}`} className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to {getTitle()}s
+          <i className="bi bi-arrow-left"></i> Back to {title}s
         </Link>
       </div>
 
@@ -260,7 +266,7 @@ function CreateMasterDataPage() {
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-plus-circle"></i> Create {getTitle()}
+                    <i className="bi bi-plus-circle"></i> Create {title}
                   </>
                 )}
               </button>

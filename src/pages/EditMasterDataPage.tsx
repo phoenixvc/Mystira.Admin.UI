@@ -68,87 +68,82 @@ type FormData =
   | EchoTypeFormData
   | FantasyThemeFormData;
 
+const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
+
+function getSchema(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return ageGroupSchema;
+    case "archetypes":
+      return archetypeSchema;
+    case "compass-axes":
+      return compassAxisSchema;
+    case "echo-types":
+      return echoTypeSchema;
+    case "fantasy-themes":
+      return fantasyThemeSchema;
+    default:
+      return archetypeSchema;
+  }
+}
+
+function getTitle(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return "Age Group";
+    case "archetypes":
+      return "Archetype";
+    case "compass-axes":
+      return "Compass Axis";
+    case "echo-types":
+      return "Echo Type";
+    case "fantasy-themes":
+      return "Fantasy Theme";
+    default:
+      return "Item";
+  }
+}
+
+function getApi(type: MasterDataType | undefined) {
+  switch (type) {
+    case "age-groups":
+      return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
+    case "archetypes":
+      return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
+    case "compass-axes":
+      return { get: compassAxesApi.getCompassAxis, update: compassAxesApi.updateCompassAxis };
+    case "echo-types":
+      return { get: echoTypesApi.getEchoType, update: echoTypesApi.updateEchoType };
+    case "fantasy-themes":
+      return { get: fantasyThemesApi.getFantasyTheme, update: fantasyThemesApi.updateFantasyTheme };
+    default:
+      return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
+  }
+}
+
+function getDefaultValues(type: MasterDataType | undefined): FormData {
+  switch (type) {
+    case "age-groups":
+      return { name: "", description: "", minAge: undefined, maxAge: undefined };
+    case "compass-axes":
+      return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
+    case "archetypes":
+    case "echo-types":
+    case "fantasy-themes":
+    default:
+      return { name: "", description: "" };
+  }
+}
+
 function EditMasterDataPage() {
   const { type, id } = useParams<{ type: MasterDataType; id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
-
-  const getSchema = () => {
-    switch (type) {
-      case "age-groups":
-        return ageGroupSchema;
-      case "archetypes":
-        return archetypeSchema;
-      case "compass-axes":
-        return compassAxisSchema;
-      case "echo-types":
-        return echoTypeSchema;
-      case "fantasy-themes":
-        return fantasyThemeSchema;
-    }
-  };
-
-  const getTitle = () => {
-    switch (type) {
-      case "age-groups":
-        return "Age Group";
-      case "archetypes":
-        return "Archetype";
-      case "compass-axes":
-        return "Compass Axis";
-      case "echo-types":
-        return "Echo Type";
-      case "fantasy-themes":
-        return "Fantasy Theme";
-    }
-  };
-
-  const getApi = () => {
-    switch (type) {
-      case "age-groups":
-        return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
-      case "archetypes":
-        return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
-      case "compass-axes":
-        return { get: compassAxesApi.getCompassAxis, update: compassAxesApi.updateCompassAxis };
-      case "echo-types":
-        return { get: echoTypesApi.getEchoType, update: echoTypesApi.updateEchoType };
-      case "fantasy-themes":
-        return {
-          get: fantasyThemesApi.getFantasyTheme,
-          update: fantasyThemesApi.updateFantasyTheme,
-        };
-    }
-  };
-
-  const getDefaultValues = (): FormData => {
-    switch (type) {
-      case "age-groups":
-        return { name: "", description: "", minAge: undefined, maxAge: undefined };
-      case "archetypes":
-        return { name: "", description: "" };
-      case "compass-axes":
-        return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
-      case "echo-types":
-        return { name: "", description: "" };
-      case "fantasy-themes":
-        return { name: "", description: "" };
-    }
-  };
-
-  const api = getApi();
-  const schema = getSchema();
+  const isValidType = type && validTypes.includes(type);
+  const api = getApi(type);
+  const schema = getSchema(type);
+  const title = getTitle(type);
 
   const {
     register,
@@ -157,7 +152,7 @@ function EditMasterDataPage() {
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(type),
   });
 
   const {
@@ -167,7 +162,7 @@ function EditMasterDataPage() {
   } = useQuery({
     queryKey: [type, id],
     queryFn: () => api.get(id!),
-    enabled: !!id,
+    enabled: !!id && isValidType,
   });
 
   const updateMutation = useMutation({
@@ -177,12 +172,12 @@ function EditMasterDataPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [type] });
       queryClient.invalidateQueries({ queryKey: [type, id] });
-      showToast.success(`${getTitle()} updated successfully!`);
+      showToast.success(`${title} updated successfully!`);
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
       showToast.error(
-        error instanceof Error ? error.message : `Failed to update ${getTitle().toLowerCase()}`
+        error instanceof Error ? error.message : `Failed to update ${title.toLowerCase()}`
       );
     },
   });
@@ -197,15 +192,23 @@ function EditMasterDataPage() {
     await updateMutation.mutateAsync(data);
   };
 
+  if (!isValidType) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
+
   if (isLoading) {
-    return <LoadingSpinner message={`Loading ${getTitle().toLowerCase()}...`} />;
+    return <LoadingSpinner message={`Loading ${title.toLowerCase()}...`} />;
   }
 
   if (error) {
     return (
       <ErrorAlert
         error={error}
-        title={`Error loading ${getTitle().toLowerCase()}`}
+        title={`Error loading ${title.toLowerCase()}`}
         onRetry={() => queryClient.invalidateQueries({ queryKey: [type, id] })}
       />
     );
@@ -214,7 +217,7 @@ function EditMasterDataPage() {
   if (!item) {
     return (
       <div className="alert alert-warning" role="alert">
-        {getTitle()} not found.
+        {title} not found.
       </div>
     );
   }
@@ -222,9 +225,9 @@ function EditMasterDataPage() {
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">✏️ Edit {getTitle()}</h1>
+        <h1 className="h2">✏️ Edit {title}</h1>
         <Link to={`/admin/master-data/${type}`} className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to {getTitle()}s
+          <i className="bi bi-arrow-left"></i> Back to {title}s
         </Link>
       </div>
 

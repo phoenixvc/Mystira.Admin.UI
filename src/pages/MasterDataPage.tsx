@@ -107,15 +107,8 @@ function MasterDataPage() {
   });
   const queryClient = useQueryClient();
 
-  if (!type || !(type in masterDataConfigs)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type
-      </div>
-    );
-  }
-
-  const config = masterDataConfigs[type];
+  const isValidType = type && type in masterDataConfigs;
+  const config = isValidType ? masterDataConfigs[type] : masterDataConfigs["archetypes"];
 
   const { data, isLoading, error } = useQuery({
     queryKey: [type, page, pageSize, searchTerm],
@@ -125,6 +118,7 @@ function MasterDataPage() {
         pageSize,
         searchTerm: searchTerm || undefined,
       }),
+    enabled: isValidType,
   });
 
   const deleteMutation = useMutation({
@@ -138,6 +132,14 @@ function MasterDataPage() {
     },
   });
 
+  if (!isValidType) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type
+      </div>
+    );
+  }
+
   const handleDeleteClick = (id: string) => {
     setDeleteConfirm({ isOpen: true, id });
   };
@@ -147,7 +149,7 @@ function MasterDataPage() {
       try {
         await deleteMutation.mutateAsync(deleteConfirm.id);
         setDeleteConfirm({ isOpen: false, id: null });
-      } catch (err) {
+      } catch (_err) {
         // Error handled by onError callback
       }
     }
