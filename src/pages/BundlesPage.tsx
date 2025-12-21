@@ -96,8 +96,11 @@ function BundlesPage() {
         <h1 className="h2">📦 Bundles</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
-            <Link to="/admin/bundles/import" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Import Bundle
+            <Link to="/admin/bundles/create" className="btn btn-sm btn-primary">
+              <i className="bi bi-plus-circle"></i> Create
+            </Link>
+            <Link to="/admin/bundles/import" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-upload"></i> Import
             </Link>
           </div>
         </div>
@@ -136,11 +139,10 @@ function BundlesPage() {
                         <td>
                           <div className="btn-group btn-group-sm">
                             <Link
-                              to={`/admin/bundles/import`}
+                              to={`/admin/bundles/edit/${bundle.id}`}
                               className="btn btn-outline-primary"
-                              title="Bundles are file-based. Use import to update."
                             >
-                              <i className="bi bi-upload"></i> Re-import
+                              <i className="bi bi-pencil"></i> Edit
                             </Link>
                             <button
                               className="btn btn-outline-danger"
@@ -162,8 +164,11 @@ function BundlesPage() {
           ) : (
             <div className="text-center py-5">
               <p className="text-muted">No bundles found.</p>
-              <Link to="/admin/bundles/import" className="btn btn-primary">
-                Import Your First Bundle
+              <Link to="/admin/bundles/create" className="btn btn-primary me-2">
+                Create Your First Bundle
+              </Link>
+              <Link to="/admin/bundles/import" className="btn btn-outline-primary">
+                Or Import Bundle
               </Link>
             </div>
           )}

@@ -71,6 +71,16 @@ export const bundlesApi = {
     return response.data;
   },
 
+  createBundle: async (bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">): Promise<Bundle> => {
+    const response = await apiClient.post<Bundle>("/api/admin/bundlesadmin", bundle);
+    return response.data;
+  },
+
+  updateBundle: async (id: string, bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">): Promise<Bundle> => {
+    const response = await apiClient.put<Bundle>(`/api/admin/bundlesadmin/${id}`, bundle);
+    return response.data;
+  },
+
   deleteBundle: async (id: string): Promise<void> => {
     await apiClient.delete(`/api/admin/bundlesadmin/${id}`);
   },
