@@ -48,7 +48,27 @@ ${errorInfo?.componentStack || "No component stack available"}
       })
       .catch((err) => {
         console.error("Failed to copy to clipboard:", err);
-        alert("Failed to copy to clipboard. Please copy the error details manually.");
+        // Fallback for non-secure contexts or clipboard access denied
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = errorText;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+          const success = document.execCommand("copy");
+          document.body.removeChild(textArea);
+          if (success) {
+            alert("Error details copied to clipboard");
+          } else {
+            alert("Failed to copy error details. Please copy manually from the console.");
+            console.log("Error details:", errorText);
+          }
+        } catch (fallbackErr) {
+          alert("Failed to copy error details. Please copy manually from the console.");
+          console.log("Error details:", errorText);
+          console.error("Fallback copy failed:", fallbackErr);
+        }
       });
   };
 

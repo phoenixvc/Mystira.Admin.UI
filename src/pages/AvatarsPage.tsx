@@ -131,10 +131,10 @@ function AvatarsPage() {
                   className={`accordion-button ${selectedAgeGroup === config.ageGroup ? "" : "collapsed"}`}
                   type="button"
                   onClick={() => {
+                    setNewMediaId("");
                     setSelectedAgeGroup(
                       selectedAgeGroup === config.ageGroup ? "" : config.ageGroup
                     );
-                    setNewMediaId("");
                   }}
                 >
                   <strong>{config.ageGroup}</strong>
