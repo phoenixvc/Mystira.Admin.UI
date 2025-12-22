@@ -130,11 +130,12 @@ function AvatarsPage() {
                 <button
                   className={`accordion-button ${selectedAgeGroup === config.ageGroup ? "" : "collapsed"}`}
                   type="button"
-                  onClick={() =>
+                  onClick={() => {
+                    setNewMediaId("");
                     setSelectedAgeGroup(
                       selectedAgeGroup === config.ageGroup ? "" : config.ageGroup
-                    )
-                  }
+                    );
+                  }}
                 >
                   <strong>{config.ageGroup}</strong>
                   <span className="badge bg-primary ms-2">{config.avatarMediaIds.length}</span>
