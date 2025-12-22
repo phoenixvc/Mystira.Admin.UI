@@ -35,3 +35,5 @@ coverage
 # Build outputs
 build
 *.tsbuildinfo
+vite.config.js
+vite.config.d.ts

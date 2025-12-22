@@ -1,32 +1,39 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authApi } from "../api/auth";
-import { useAuthStore } from "../state/authStore";
-import { showToast } from "../utils/toast";
+import { useAuth } from "../auth";
+import { useEffect, useState } from "react";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuthStore();
+  const { isAuthenticated, isLoading, login } = useAuth();
   const navigate = useNavigate();
+  const [loginInProgress, setLoginInProgress] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await authApi.login(email, password);
-      // Cookie-based auth - no token needed, just mark as authenticated
-      login("authenticated"); // Use placeholder token for state management
-      showToast.success("Login successful!");
+  // Redirect to admin if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
       navigate("/admin");
-    } catch (err) {
-      showToast.error(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleLogin = async () => {
+    setLoginInProgress(true);
+    try {
+      await login();
+      // Navigation will happen automatically via useEffect once authenticated
+    } catch (error) {
+      console.error("Login failed:", error);
+      setLoginInProgress(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
@@ -35,37 +42,27 @@ function LoginPage() {
           <div className="card shadow mt-5">
             <div className="card-body p-5">
               <h2 className="card-title text-center mb-4">Mystira Admin</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                  {loading ? "Logging in..." : "Login"}
-                </button>
-              </form>
+              <p className="text-center text-muted mb-4">
+                Sign in with your Microsoft account to continue
+              </p>
+              <button
+                type="button"
+                className="btn btn-primary w-100"
+                onClick={handleLogin}
+                disabled={loginInProgress}
+              >
+                {loginInProgress ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-microsoft me-2"></i>
+                    Sign in with Microsoft
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
-import axios from "axios";
-import { useAuthStore } from "../state/authStore";
+import axios, { InternalAxiosRequestConfig } from "axios";
+import { msalInstance } from "../auth/msalInstance";
+import { tokenRequest } from "../auth";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -8,14 +9,29 @@ export const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Important for cookie-based auth
 });
 
-// Request interceptor - cookies are handled automatically by browser
-// No need to add Authorization header for cookie-based auth
+// Request interceptor to add MSAL access token
 apiClient.interceptors.request.use(
-  config => {
-    // Cookies are sent automatically with withCredentials: true
+  async (config: InternalAxiosRequestConfig) => {
+    const account = msalInstance.getActiveAccount();
+
+    if (account) {
+      try {
+        const response = await msalInstance.acquireTokenSilent({
+          ...tokenRequest,
+          account,
+        });
+        
+        if (config.headers) {
+          config.headers.Authorization = `Bearer ${response.accessToken}`;
+        }
+      } catch (error) {
+        console.error("Token acquisition failed:", error);
+        // Let the request proceed without token - backend will return 401 if needed
+      }
+    }
+
     return config;
   },
   error => {
@@ -28,8 +44,7 @@ apiClient.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear auth and redirect to login
-      useAuthStore.getState().logout();
+      // Unauthorized - redirect to login
       window.location.href = "/login";
     }
     return Promise.reject(error);
