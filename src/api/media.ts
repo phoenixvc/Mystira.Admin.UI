@@ -63,6 +63,34 @@ export const mediaApi = {
     return response.data;
   },
 
+  uploadMediaZip: async (
+    file: File,
+    overwriteMetadata = false,
+    overwriteMedia = false
+  ): Promise<{
+    success: boolean;
+    message: string;
+    processedFiles: number;
+    errors: string[];
+  }> => {
+    const formData = new FormData();
+    formData.append("zipFile", file);
+    formData.append("overwriteMetadata", overwriteMetadata.toString());
+    formData.append("overwriteMedia", overwriteMedia.toString());
+
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+      processedFiles: number;
+      errors: string[];
+    }>("/api/admin/mediaadmin/upload-zip", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
   deleteMedia: async (mediaId: string): Promise<void> => {
     await apiClient.delete(`/api/admin/mediaadmin/${mediaId}`);
   },

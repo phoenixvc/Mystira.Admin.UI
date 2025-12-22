@@ -99,6 +99,9 @@ function MediaPage() {
             <Link to="/admin/media/import" className="btn btn-sm btn-primary">
               <i className="bi bi-upload"></i> Upload Media
             </Link>
+            <Link to="/admin/media/import-zip" className="btn btn-sm btn-outline-primary">
+              <i className="bi bi-file-zip"></i> Import ZIP
+            </Link>
           </div>
         </div>
       </div>

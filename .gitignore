@@ -35,3 +35,10 @@ coverage
 # Build outputs
 build
 *.tsbuildinfo
+
+# Generated config files
+vite.config.js
+vite.config.d.ts
+
+# Lock files
+package-lock.json

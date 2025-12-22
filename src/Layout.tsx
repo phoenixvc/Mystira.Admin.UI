@@ -1,13 +1,11 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useAuthStore } from "./state/authStore";
+import { Link, Outlet } from "react-router-dom";
+import { useAuth } from "./auth";
 
 function Layout() {
-  const { logout } = useAuthStore();
-  const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -55,6 +53,11 @@ function Layout() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/admin/bundles">
                     Bundles
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/avatars">
+                    Avatars
                   </Link>
                 </li>
                 <li className="nav-item">

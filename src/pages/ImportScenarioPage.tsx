@@ -2,13 +2,21 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { scenariosApi } from "../api/scenarios";
+import Alert from "../components/Alert";
+import Card from "../components/Card";
+import Checkbox from "../components/Checkbox";
+import FileInput from "../components/FileInput";
+import ValidationResults from "../components/ValidationResults";
+import { useFileValidation } from "../hooks/useFileValidation";
+import { useFileUpload } from "../hooks/useFileUpload";
 import { showToast } from "../utils/toast";
 
 function ImportScenarioPage() {
   const [file, setFile] = useState<File | null>(null);
   const [overwriteExisting, setOverwriteExisting] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
+
+  const { validating, validationResult, validateFile, resetValidation } = useFileValidation();
 
   const uploadMutation = useMutation({
     mutationFn: (file: File) => scenariosApi.uploadScenario(file, overwriteExisting),
@@ -18,35 +26,33 @@ function ImportScenarioPage() {
     },
     onError: error => {
       showToast.error(error instanceof Error ? error.message : "Failed to upload scenario file");
-      setUploading(false);
     },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (!selectedFile.name.endsWith(".yaml") && !selectedFile.name.endsWith(".yml")) {
-        showToast.error("Please select a .yaml or .yml file");
-        return;
-      }
-      setFile(selectedFile);
+  const { uploading, uploadFile } = useFileUpload({
+    onUpload: file => uploadMutation.mutateAsync(file),
+    validationResult,
+  });
+
+  const handleFileChange = (selectedFile: File | null) => {
+    setFile(selectedFile);
+    resetValidation();
+  };
+
+  const handleValidate = () => {
+    if (file) {
+      validateFile(file);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) {
-      showToast.error("Please select a file");
-      return;
-    }
-
-    setUploading(true);
-    try {
-      await uploadMutation.mutateAsync(file);
-    } catch {
-      // Error handled in onError
+    if (file) {
+      await uploadFile(file);
     }
   };
+
+  const isProcessing = uploading || validating;
 
   return (
     <div>
@@ -57,63 +63,91 @@ function ImportScenarioPage() {
         </Link>
       </div>
 
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="scenarioFile" className="form-label">
-                Scenario YAML File
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="scenarioFile"
-                accept=".yaml,.yml"
-                onChange={handleFileChange}
-                disabled={uploading}
-                required
-              />
-              <div className="form-text">Select a YAML file containing scenario definition</div>
-            </div>
+      <Card
+        title="Schema Validation"
+        subtitle="Validate your scenario file against the Mystira story schema to catch structural or formatting issues before uploading."
+        className="mb-3"
+      >
+        <Alert variant="info">
+          Validation checks for required fields, correct data types, valid enums, and schema
+          constraints.
+        </Alert>
+      </Card>
 
-            <div className="mb-3 form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="overwriteExisting"
-                checked={overwriteExisting}
-                onChange={e => setOverwriteExisting(e.target.checked)}
-                disabled={uploading}
-              />
-              <label className="form-check-label" htmlFor="overwriteExisting">
-                Overwrite existing scenario if title matches
-              </label>
-            </div>
+      <Card className="mb-3">
+        <form onSubmit={handleSubmit}>
+          <FileInput
+            id="scenarioFile"
+            label="Scenario File"
+            accept=".yaml,.yml,.json"
+            helpText="Select a YAML (.yaml, .yml) or JSON (.json) file containing scenario definition"
+            selectedFile={file}
+            onChange={handleFileChange}
+            disabled={isProcessing}
+            required
+          />
 
-            <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-primary" disabled={!file || uploading}>
-                {uploading ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-upload"></i> Upload Scenario
-                  </>
-                )}
-              </button>
-              <Link to="/admin/scenarios" className="btn btn-secondary">
-                Cancel
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
+          <div className="mb-3">
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={handleValidate}
+              disabled={!file || isProcessing}
+            >
+              {validating ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Validating...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle"></i> Validate Schema
+                </>
+              )}
+            </button>
+          </div>
+
+          <Checkbox
+            id="overwriteExisting"
+            label="Overwrite existing scenario if title matches"
+            checked={overwriteExisting}
+            onChange={setOverwriteExisting}
+            disabled={isProcessing}
+          />
+
+          <div className="d-flex gap-2">
+            <button type="submit" className="btn btn-primary" disabled={!file || isProcessing}>
+              {uploading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-upload"></i> Upload Scenario
+                </>
+              )}
+            </button>
+            <Link to="/admin/scenarios" className="btn btn-secondary">
+              Cancel
+            </Link>
+          </div>
+        </form>
+      </Card>
+
+      {validationResult && (
+        <Card title="Validation Results">
+          <ValidationResults valid={validationResult.valid} errors={validationResult.errors} />
+        </Card>
+      )}
     </div>
   );
 }
