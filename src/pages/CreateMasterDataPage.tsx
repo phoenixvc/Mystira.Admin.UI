@@ -176,17 +176,6 @@ function CreateMasterDataPage() {
     },
   });
 
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
-
   const onSubmit = async (data: FormData) => {
     await createMutation.mutateAsync(data);
   };
