@@ -42,9 +42,14 @@ Component Stack:
 ${errorInfo?.componentStack || "No component stack available"}
     `.trim();
 
-    navigator.clipboard.writeText(errorText).then(() => {
-      alert("Error details copied to clipboard");
-    });
+    navigator.clipboard.writeText(errorText)
+      .then(() => {
+        alert("Error details copied to clipboard");
+      })
+      .catch((err) => {
+        console.error("Failed to copy to clipboard:", err);
+        alert("Failed to copy to clipboard. Please copy the error details manually.");
+      });
   };
 
   return (

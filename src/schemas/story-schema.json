@@ -432,7 +432,7 @@
           { "if": { "properties": { "type": { "const": "roll" } } }, "then": { "required": ["difficulty", "branches"] } },
           { "if": { "properties": { "type": { "const": "choice" } } }, "then": { "required": ["branches"] } },
           { "if": { "properties": { "type": { "const": "narrative" } } }, "then": { "required": ["next_scene"] } },
-          { "if": { "properties": { "type": { "const": "special" } } }, "then": { "properties": { "next_scene": { "type": "null" } } } }
+          { "if": { "properties": { "type": { "const": "special" } } }, "then": { "required": ["next_scene"], "properties": { "next_scene": { "type": "null" } } } }
         ]
       }
     }
@@ -457,32 +457,6 @@
     {
       "if": { "properties": { "minimum_age": { "const": 13 } } },
       "then": { "properties": { "age_group": { "enum": ["13-18", "19-150"] } } }
-    },
-    {
-      "if": {
-        "properties": {
-          "scenes": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "music": {
-                  "type": "object",
-                  "properties": {
-                    "profile": { "enum": ["neutral", "cozy", "playful", "wonder", "mystery", "tense", "action", "sad", "victory"] }
-                  },
-                  "required": ["profile"]
-                }
-              },
-              "required": ["music"]
-            }
-          }
-        }
-      },
-      "then": {
-        "required": ["music_palette"],
-        "description": "If any scene explicitly requests a non-'none' profile, the story should provide a music_palette so the engine can resolve allowed tracks."
-      }
     }
   ]
 }
