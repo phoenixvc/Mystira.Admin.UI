@@ -6,7 +6,7 @@ import { loginRequest, tokenRequest } from "./msalConfig";
 export function useAuth() {
   const { instance, inProgress, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
-  const account = useAccount(accounts[0] || {});
+  const account = useAccount(accounts[0]);
 
   const login = useCallback(async () => {
     if (inProgress !== InteractionStatus.None) return;

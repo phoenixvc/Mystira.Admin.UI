@@ -44,6 +44,8 @@ export const loginRequest: PopupRequest = {
 };
 
 // Scopes for token request
+// Note: This should be configured in environment variables
+// Format: api://{your-api-client-id}/.default or api://{your-api-client-id}/access_as_user
 export const tokenRequest = {
-  scopes: [import.meta.env.VITE_AZURE_API_SCOPE || "api://default-scope/.default"],
+  scopes: [import.meta.env.VITE_AZURE_API_SCOPE || "User.Read"],
 };

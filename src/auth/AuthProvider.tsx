@@ -24,8 +24,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } else {
           // Check if there are any accounts already signed in
           const accounts = msalInstance.getAllAccounts();
-          if (accounts.length > 0) {
-            msalInstance.setActiveAccount(accounts[0] || null);
+          if (accounts.length > 0 && accounts[0]) {
+            msalInstance.setActiveAccount(accounts[0]);
           }
         }
 

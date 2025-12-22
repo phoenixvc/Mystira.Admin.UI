@@ -21,6 +21,7 @@ function LoginPage() {
       // Navigation will happen automatically via useEffect once authenticated
     } catch (error) {
       console.error("Login failed:", error);
+    } finally {
       setLoginInProgress(false);
     }
   };
