@@ -65,10 +65,7 @@ type FormData =
   | EchoTypeFormData
   | FantasyThemeFormData;
 
-function CreateMasterDataPage() {
-  const { type } = useParams<{ type: MasterDataType }>();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
 
   const getSchema = () => {
     if (!type) return null;
@@ -142,16 +139,18 @@ function CreateMasterDataPage() {
     }
   };
 
-  const api = getApi();
-  const schema = getSchema();
+  const isValidType = type && validTypes.includes(type);
+  const api = getApi(type);
+  const schema = getSchema(type);
+  const title = getTitle(type);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: getDefaultValues(),
+    esolver: schema ? zodResolver(schema) : undefined,
+    defaultValues: getDefaultValues(type),
   });
 
   const createMutation = useMutation({
@@ -162,12 +161,12 @@ function CreateMasterDataPage() {
     onSuccess: () => {
       if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
-      showToast.success(`${getTitle()} created successfully!`);
+      showToast.success(`${title} created successfully!`);
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
       showToast.error(
-        error instanceof Error ? error.message : `Failed to create ${getTitle().toLowerCase()}`
+        error instanceof Error ? error.message : `Failed to create ${title.toLowerCase()}`
       );
     },
   });
@@ -187,12 +186,20 @@ function CreateMasterDataPage() {
     await createMutation.mutateAsync(data);
   };
 
+  if (!isValidType) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">➕ Create {getTitle()}</h1>
+        <h1 className="h2">➕ Create {title}</h1>
         <Link to={`/admin/master-data/${type}`} className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to {getTitle()}s
+          <i className="bi bi-arrow-left"></i> Back to {title}s
         </Link>
       </div>
 
@@ -211,7 +218,7 @@ function CreateMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as Record<string, { message?: string }>).minAge?.message}
+                  error={(errors as Record<string, { message?: string } | undefined>).minAge?.message}
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -224,7 +231,7 @@ function CreateMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as Record<string, { message?: string }>).maxAge?.message}
+                  error={(errors as Record<string, { message?: string } | undefined>).maxAge?.message}
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput
@@ -241,7 +248,10 @@ function CreateMasterDataPage() {
               <>
                 <FormField
                   label="Positive Label"
-                  error={(errors as Record<string, { message?: string }>).positiveLabel?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).positiveLabel
+                      ?.message
+                  }
                   helpText="Label for the positive end of the axis"
                 >
                   <TextInput id="positiveLabel" {...register("positiveLabel")} />
@@ -249,7 +259,10 @@ function CreateMasterDataPage() {
 
                 <FormField
                   label="Negative Label"
-                  error={(errors as Record<string, { message?: string }>).negativeLabel?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).negativeLabel
+                      ?.message
+                  }
                   helpText="Label for the negative end of the axis"
                 >
                   <TextInput id="negativeLabel" {...register("negativeLabel")} />
@@ -274,7 +287,7 @@ function CreateMasterDataPage() {
                   </>
                 ) : (
                   <>
-                    <i className="bi bi-plus-circle"></i> Create {getTitle()}
+                    <i className="bi bi-plus-circle"></i> Create {title}
                   </>
                 )}
               </button>

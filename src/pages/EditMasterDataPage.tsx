@@ -148,8 +148,10 @@ function EditMasterDataPage() {
     }
   };
 
-  const api = getApi();
-  const schema = getSchema();
+  const isValidType = type && validTypes.includes(type);
+  const api = getApi(type);
+  const schema = getSchema(type);
+  const title = getTitle(type);
 
   const {
     register,
@@ -183,12 +185,12 @@ function EditMasterDataPage() {
       if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
       queryClient.invalidateQueries({ queryKey: [type, id] });
-      showToast.success(`${getTitle()} updated successfully!`);
+      showToast.success(`${title} updated successfully!`);
       navigate(`/admin/master-data/${type}`);
     },
     onError: error => {
       showToast.error(
-        error instanceof Error ? error.message : `Failed to update ${getTitle().toLowerCase()}`
+        error instanceof Error ? error.message : `Failed to update ${title.toLowerCase()}`
       );
     },
   });
@@ -214,15 +216,23 @@ function EditMasterDataPage() {
     await updateMutation.mutateAsync(data);
   };
 
+  if (!isValidType) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
+
   if (isLoading) {
-    return <LoadingSpinner message={`Loading ${getTitle().toLowerCase()}...`} />;
+    return <LoadingSpinner message={`Loading ${title.toLowerCase()}...`} />;
   }
 
   if (error) {
     return (
       <ErrorAlert
         error={error}
-        title={`Error loading ${getTitle().toLowerCase()}`}
+        title={`Error loading ${title.toLowerCase()}`}
         onRetry={() => queryClient.invalidateQueries({ queryKey: [type, id] })}
       />
     );
@@ -231,7 +241,7 @@ function EditMasterDataPage() {
   if (!item) {
     return (
       <div className="alert alert-warning" role="alert">
-        {getTitle()} not found.
+        {title} not found.
       </div>
     );
   }
@@ -239,9 +249,9 @@ function EditMasterDataPage() {
   return (
     <div>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">✏️ Edit {getTitle()}</h1>
+        <h1 className="h2">✏️ Edit {title}</h1>
         <Link to={`/admin/master-data/${type}`} className="btn btn-sm btn-outline-secondary">
-          <i className="bi bi-arrow-left"></i> Back to {getTitle()}s
+          <i className="bi bi-arrow-left"></i> Back to {title}s
         </Link>
       </div>
 
