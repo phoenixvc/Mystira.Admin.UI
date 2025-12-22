@@ -124,7 +124,7 @@ function AvatarsPage() {
 
       {avatarConfigs.length > 0 ? (
         <div className="accordion" id="avatarAccordion">
-          {avatarConfigs.map((config, index) => (
+          {avatarConfigs.map((config) => (
             <div className="accordion-item" key={config.ageGroup}>
               <h2 className="accordion-header">
                 <button

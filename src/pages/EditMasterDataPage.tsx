@@ -68,77 +68,85 @@ type FormData =
   | EchoTypeFormData
   | FantasyThemeFormData;
 
-const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
-
-function getSchema(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return ageGroupSchema;
-    case "archetypes":
-      return archetypeSchema;
-    case "compass-axes":
-      return compassAxisSchema;
-    case "echo-types":
-      return echoTypeSchema;
-    case "fantasy-themes":
-      return fantasyThemeSchema;
-    default:
-      return archetypeSchema;
-  }
-}
-
-function getTitle(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return "Age Group";
-    case "archetypes":
-      return "Archetype";
-    case "compass-axes":
-      return "Compass Axis";
-    case "echo-types":
-      return "Echo Type";
-    case "fantasy-themes":
-      return "Fantasy Theme";
-    default:
-      return "Item";
-  }
-}
-
-function getApi(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
-    case "archetypes":
-      return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
-    case "compass-axes":
-      return { get: compassAxesApi.getCompassAxis, update: compassAxesApi.updateCompassAxis };
-    case "echo-types":
-      return { get: echoTypesApi.getEchoType, update: echoTypesApi.updateEchoType };
-    case "fantasy-themes":
-      return { get: fantasyThemesApi.getFantasyTheme, update: fantasyThemesApi.updateFantasyTheme };
-    default:
-      return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
-  }
-}
-
-function getDefaultValues(type: MasterDataType | undefined): FormData {
-  switch (type) {
-    case "age-groups":
-      return { name: "", description: "", minAge: undefined, maxAge: undefined };
-    case "compass-axes":
-      return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
-    case "archetypes":
-    case "echo-types":
-    case "fantasy-themes":
-    default:
-      return { name: "", description: "" };
-  }
-}
-
 function EditMasterDataPage() {
   const { type, id } = useParams<{ type: MasterDataType; id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const getSchema = () => {
+    if (!type) return null;
+    switch (type) {
+      case "age-groups":
+        return ageGroupSchema;
+      case "archetypes":
+        return archetypeSchema;
+      case "compass-axes":
+        return compassAxisSchema;
+      case "echo-types":
+        return echoTypeSchema;
+      case "fantasy-themes":
+        return fantasyThemeSchema;
+      default:
+        return null;
+    }
+  };
+
+  const getTitle = () => {
+    if (!type) return "";
+    switch (type) {
+      case "age-groups":
+        return "Age Group";
+      case "archetypes":
+        return "Archetype";
+      case "compass-axes":
+        return "Compass Axis";
+      case "echo-types":
+        return "Echo Type";
+      case "fantasy-themes":
+        return "Fantasy Theme";
+      default:
+        return "";
+    }
+  };
+
+  const getApi = () => {
+    if (!type) return null;
+    switch (type) {
+      case "age-groups":
+        return { get: ageGroupsApi.getAgeGroup, update: ageGroupsApi.updateAgeGroup };
+      case "archetypes":
+        return { get: archetypesApi.getArchetype, update: archetypesApi.updateArchetype };
+      case "compass-axes":
+        return { get: compassAxesApi.getCompassAxis, update: compassAxesApi.updateCompassAxis };
+      case "echo-types":
+        return { get: echoTypesApi.getEchoType, update: echoTypesApi.updateEchoType };
+      case "fantasy-themes":
+        return {
+          get: fantasyThemesApi.getFantasyTheme,
+          update: fantasyThemesApi.updateFantasyTheme,
+        };
+      default:
+        return null;
+    }
+  };
+
+  const getDefaultValues = (): FormData => {
+    if (!type) return { name: "", description: "" };
+    switch (type) {
+      case "age-groups":
+        return { name: "", description: "", minAge: undefined, maxAge: undefined };
+      case "archetypes":
+        return { name: "", description: "" };
+      case "compass-axes":
+        return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
+      case "echo-types":
+        return { name: "", description: "" };
+      case "fantasy-themes":
+        return { name: "", description: "" };
+      default:
+        return { name: "", description: "" };
+    }
+  };
 
   const isValidType = type && validTypes.includes(type);
   const api = getApi(type);
@@ -151,8 +159,8 @@ function EditMasterDataPage() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: getDefaultValues(type),
+    resolver: schema ? zodResolver(schema) : undefined,
+    defaultValues: getDefaultValues(),
   });
 
   const {
@@ -161,15 +169,20 @@ function EditMasterDataPage() {
     error,
   } = useQuery({
     queryKey: [type, id],
-    queryFn: () => api.get(id!),
-    enabled: !!id && isValidType,
+    queryFn: () => {
+      if (!api || !id) throw new Error("Invalid API or ID");
+      return api.get(id);
+    },
+    enabled: !!id && !!api && !!type && ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type),
   });
 
   const updateMutation = useMutation({
     mutationFn: (data: FormData) => {
-      return api.update(id!, data);
+      if (!api || !id) throw new Error("Invalid API or ID");
+      return api.update(id, data);
     },
     onSuccess: () => {
+      if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
       queryClient.invalidateQueries({ queryKey: [type, id] });
       showToast.success(`${title} updated successfully!`);
@@ -187,6 +200,17 @@ function EditMasterDataPage() {
       reset(item as FormData);
     }
   }, [item, reset]);
+
+  if (
+    !type ||
+    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
+  ) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
 
   const onSubmit = async (data: FormData) => {
     await updateMutation.mutateAsync(data);
@@ -246,7 +270,7 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as Record<string, { message?: string } | undefined>).minAge?.message}
+                  error={(errors as Record<string, { message?: string }>).minAge?.message}
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -259,7 +283,7 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as Record<string, { message?: string } | undefined>).maxAge?.message}
+                  error={(errors as Record<string, { message?: string }>).maxAge?.message}
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput
@@ -276,10 +300,7 @@ function EditMasterDataPage() {
               <>
                 <FormField
                   label="Positive Label"
-                  error={
-                    (errors as Record<string, { message?: string } | undefined>).positiveLabel
-                      ?.message
-                  }
+                  error={(errors as Record<string, { message?: string }>).positiveLabel?.message}
                   helpText="Label for the positive end of the axis"
                 >
                   <TextInput id="positiveLabel" {...register("positiveLabel")} />
@@ -287,10 +308,7 @@ function EditMasterDataPage() {
 
                 <FormField
                   label="Negative Label"
-                  error={
-                    (errors as Record<string, { message?: string } | undefined>).negativeLabel
-                      ?.message
-                  }
+                  error={(errors as Record<string, { message?: string }>).negativeLabel?.message}
                   helpText="Label for the negative end of the axis"
                 >
                   <TextInput id="negativeLabel" {...register("negativeLabel")} />
