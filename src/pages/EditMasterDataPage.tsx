@@ -148,10 +148,11 @@ function EditMasterDataPage() {
     }
   };
 
+  const validTypes: MasterDataType[] = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
   const isValidType = type && validTypes.includes(type);
-  const api = getApi(type);
-  const schema = getSchema(type);
-  const title = getTitle(type);
+  const api = getApi();
+  const schema = getSchema();
+  const title = getTitle();
 
   const {
     register,

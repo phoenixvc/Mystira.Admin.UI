@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { mediaApi } from "../api/media";
 import { showToast } from "../utils/toast";
 
@@ -15,7 +15,6 @@ function ImportMediaZipPage() {
     processedFiles: number;
     errors: string[];
   } | null>(null);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({

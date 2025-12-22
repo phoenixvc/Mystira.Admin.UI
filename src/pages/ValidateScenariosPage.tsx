@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { scenariosApi, ScenarioReferenceValidation } from "../api/scenarios";
@@ -10,7 +10,6 @@ function ValidateScenariosPage() {
     null
   );
   const [isValidating, setIsValidating] = useState(false);
-  const queryClient = useQueryClient();
 
   const validateMutation = useMutation({
     mutationFn: (includeMetadata: boolean) =>
