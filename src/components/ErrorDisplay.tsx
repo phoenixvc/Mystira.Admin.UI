@@ -1,5 +1,4 @@
 import { ErrorInfo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import Card from "./Card";
 
@@ -17,13 +16,12 @@ function ErrorDisplay({
   showStackTrace = import.meta.env.DEV,
 }: ErrorDisplayProps) {
   const [expanded, setExpanded] = useState(false);
-  const navigate = useNavigate();
 
   const handleGoHome = () => {
     if (onReset) {
       onReset();
     }
-    navigate("/admin");
+    window.location.href = "/admin";
   };
 
   const handleReload = () => {
