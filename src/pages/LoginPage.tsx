@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
-import { useEffect, useState } from "react";
 
 function LoginPage() {
   const { isAuthenticated, isLoading, login } = useAuth();
