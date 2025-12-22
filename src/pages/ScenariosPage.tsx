@@ -97,10 +97,13 @@ function ScenariosPage() {
         <div className="btn-toolbar mb-2 mb-md-0">
           <div className="btn-group me-2">
             <Link to="/admin/scenarios/create" className="btn btn-sm btn-primary">
-              <i className="bi bi-plus-circle"></i> Create Scenario
+              <i className="bi bi-plus-circle"></i> Create
             </Link>
             <Link to="/admin/scenarios/import" className="btn btn-sm btn-outline-primary">
-              <i className="bi bi-upload"></i> Import Scenario
+              <i className="bi bi-upload"></i> Import
+            </Link>
+            <Link to="/admin/scenarios/validate" className="btn btn-sm btn-outline-success">
+              <i className="bi bi-check-circle"></i> Validate
             </Link>
           </div>
         </div>

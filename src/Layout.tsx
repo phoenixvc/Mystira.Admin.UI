@@ -56,6 +56,11 @@ function Layout() {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link className="nav-link" to="/admin/avatars">
+                    Avatars
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/admin/character-maps">
                     Character Maps
                   </Link>

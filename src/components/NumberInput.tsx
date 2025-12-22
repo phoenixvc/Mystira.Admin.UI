@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 interface NumberInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
