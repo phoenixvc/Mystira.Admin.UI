@@ -31,6 +31,15 @@ export interface ScenarioQueryResponse {
   pageSize: number;
 }
 
+export interface ScenarioReferenceValidation {
+  scenarioId: string;
+  scenarioName: string;
+  isValid: boolean;
+  missingMediaReferences: string[];
+  invalidMediaReferences: string[];
+  metadataIssues: string[];
+}
+
 export const scenariosApi = {
   getScenarios: async (
     request?: ScenarioQueryRequest
@@ -89,6 +98,31 @@ export const scenariosApi = {
         "Content-Type": "multipart/form-data",
       },
     });
+    return response.data;
+  },
+
+  validateScenarioReferences: async (
+    id: string,
+    includeMetadataValidation = true
+  ): Promise<ScenarioReferenceValidation> => {
+    const response = await apiClient.get<ScenarioReferenceValidation>(
+      `/api/admin/scenariosadmin/${id}/validate-references`,
+      {
+        params: { includeMetadataValidation },
+      }
+    );
+    return response.data;
+  },
+
+  validateAllScenarioReferences: async (
+    includeMetadataValidation = true
+  ): Promise<ScenarioReferenceValidation[]> => {
+    const response = await apiClient.get<ScenarioReferenceValidation[]>(
+      "/api/admin/scenariosadmin/validate-all-references",
+      {
+        params: { includeMetadataValidation },
+      }
+    );
     return response.data;
   },
 };
