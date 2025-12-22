@@ -67,75 +67,77 @@ type FormData =
 
 const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
 
-function getSchema(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return ageGroupSchema;
-    case "archetypes":
-      return archetypeSchema;
-    case "compass-axes":
-      return compassAxisSchema;
-    case "echo-types":
-      return echoTypeSchema;
-    case "fantasy-themes":
-      return fantasyThemeSchema;
-    default:
-      return archetypeSchema; // Default schema for invalid types
-  }
-}
+  const getSchema = () => {
+    if (!type) return null;
+    switch (type) {
+      case "age-groups":
+        return ageGroupSchema;
+      case "archetypes":
+        return archetypeSchema;
+      case "compass-axes":
+        return compassAxisSchema;
+      case "echo-types":
+        return echoTypeSchema;
+      case "fantasy-themes":
+        return fantasyThemeSchema;
+      default:
+        return null;
+    }
+  };
 
-function getTitle(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return "Age Group";
-    case "archetypes":
-      return "Archetype";
-    case "compass-axes":
-      return "Compass Axis";
-    case "echo-types":
-      return "Echo Type";
-    case "fantasy-themes":
-      return "Fantasy Theme";
-    default:
-      return "Item";
-  }
-}
+  const getTitle = () => {
+    if (!type) return "";
+    switch (type) {
+      case "age-groups":
+        return "Age Group";
+      case "archetypes":
+        return "Archetype";
+      case "compass-axes":
+        return "Compass Axis";
+      case "echo-types":
+        return "Echo Type";
+      case "fantasy-themes":
+        return "Fantasy Theme";
+      default:
+        return "";
+    }
+  };
 
-function getApi(type: MasterDataType | undefined) {
-  switch (type) {
-    case "age-groups":
-      return ageGroupsApi.createAgeGroup;
-    case "archetypes":
-      return archetypesApi.createArchetype;
-    case "compass-axes":
-      return compassAxesApi.createCompassAxis;
-    case "echo-types":
-      return echoTypesApi.createEchoType;
-    case "fantasy-themes":
-      return fantasyThemesApi.createFantasyTheme;
-    default:
-      return archetypesApi.createArchetype; // Default for invalid types
-  }
-}
+  const getApi = () => {
+    if (!type) return null;
+    switch (type) {
+      case "age-groups":
+        return ageGroupsApi.createAgeGroup;
+      case "archetypes":
+        return archetypesApi.createArchetype;
+      case "compass-axes":
+        return compassAxesApi.createCompassAxis;
+      case "echo-types":
+        return echoTypesApi.createEchoType;
+      case "fantasy-themes":
+        return fantasyThemesApi.createFantasyTheme;
+      default:
+        return null;
+    }
+  };
 
-function getDefaultValues(type: MasterDataType | undefined): FormData {
-  switch (type) {
-    case "age-groups":
-      return { name: "", description: "", minAge: undefined, maxAge: undefined };
-    case "compass-axes":
-      return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
-    case "archetypes":
-    case "echo-types":
-    case "fantasy-themes":
-    default:
-      return { name: "", description: "" };
-  }
-}
-
-function CreateMasterDataPage() {
-  const { type } = useParams<{ type: MasterDataType }>();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const getDefaultValues = (): FormData => {
+    if (!type) return { name: "", description: "" };
+    switch (type) {
+      case "age-groups":
+        return { name: "", description: "", minAge: undefined, maxAge: undefined };
+      case "archetypes":
+        return { name: "", description: "" };
+      case "compass-axes":
+        return { name: "", description: "", positiveLabel: "", negativeLabel: "" };
+      case "echo-types":
+        return { name: "", description: "" };
+      case "fantasy-themes":
+        return { name: "", description: "" };
+      default:
+        return { name: "", description: "" };
+    }
+  };
 
   const isValidType = type && validTypes.includes(type);
   const api = getApi(type);
@@ -147,15 +149,17 @@ function CreateMasterDataPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    esolver: schema ? zodResolver(schema) : undefined,
     defaultValues: getDefaultValues(type),
   });
 
   const createMutation = useMutation({
     mutationFn: (data: FormData) => {
+      if (!api) throw new Error("Invalid API");
       return api(data);
     },
     onSuccess: () => {
+      if (!type) return;
       queryClient.invalidateQueries({ queryKey: [type] });
       showToast.success(`${title} created successfully!`);
       navigate(`/admin/master-data/${type}`);
@@ -166,6 +170,17 @@ function CreateMasterDataPage() {
       );
     },
   });
+
+  if (
+    !type ||
+    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
+  ) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Invalid master data type.
+      </div>
+    );
+  }
 
   const onSubmit = async (data: FormData) => {
     await createMutation.mutateAsync(data);
