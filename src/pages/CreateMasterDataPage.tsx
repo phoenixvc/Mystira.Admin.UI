@@ -67,6 +67,11 @@ type FormData =
 
 const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
 
+function CreateMasterDataPage() {
+  const { type } = useParams<{ type: MasterDataType }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const getSchema = () => {
     if (!type) return null;
     switch (type) {
@@ -140,17 +145,17 @@ const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "f
   };
 
   const isValidType = type && validTypes.includes(type);
-  const api = getApi(type);
-  const schema = getSchema(type);
-  const title = getTitle(type);
+  const api = getApi();
+  const schema = getSchema();
+  const title = getTitle();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    esolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: getDefaultValues(type),
+    resolver: schema ? zodResolver(schema) : undefined,
+    defaultValues: getDefaultValues(),
   });
 
   const createMutation = useMutation({
@@ -170,17 +175,6 @@ const validTypes = ["age-groups", "archetypes", "compass-axes", "echo-types", "f
       );
     },
   });
-
-  if (
-    !type ||
-    !["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type)
-  ) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Invalid master data type.
-      </div>
-    );
-  }
 
   const onSubmit = async (data: FormData) => {
     await createMutation.mutateAsync(data);
