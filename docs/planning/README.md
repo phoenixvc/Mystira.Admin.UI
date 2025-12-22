@@ -6,6 +6,7 @@ This directory contains strategic planning documents for the Mystira Admin UI pr
 
 - [Implementation Roadmap](./implementation-roadmap.md) - Phased implementation plan
 - [Implementation Checklist](./implementation-checklist.md) - Actionable task checklist
+- [Data Strategy Integration](./data-strategy-integration.md) - Hybrid data strategy alignment
 
 ## Related Documentation
 
