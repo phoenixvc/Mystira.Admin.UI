@@ -9,6 +9,45 @@
 
 This document outlines the deployment strategy for the Mystira Admin UI application, covering CI/CD pipelines, environment configurations, and deployment procedures.
 
+## Cross-Repository Deployment Matrix
+
+The Mystira platform uses a distributed deployment strategy across repositories:
+
+| Repository | Dev Deploy | Staging/Prod Deploy | Notes |
+|------------|------------|---------------------|-------|
+| **Mystira.Admin.UI** | ✅ This repo | Via workspace | React frontend for admin portal |
+| **Mystira.Admin.Api** | Via workspace | Via workspace | .NET 9 API, CI in own repo |
+| **Mystira.App** | Own repo | Own repo | Full CI/CD for API + PWA |
+| **mystira.workspace** | N/A | ✅ Central | Infrastructure & coordinated deploys |
+
+### Deployment Responsibility
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        DEVELOPMENT                                  │
+├─────────────────────────────────────────────────────────────────────┤
+│  Admin.UI      ──► deploy-dev.yml ──► Azure Static Web Apps (Dev)  │
+│  Mystira.App   ──► app-ci.yml     ──► Own deployment pipeline      │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                   STAGING / PRODUCTION                              │
+├─────────────────────────────────────────────────────────────────────┤
+│  mystira.workspace (Central Orchestrator)                           │
+│  ├── staging-deploy.yml  ──► Coordinates all staging deploys       │
+│  ├── prod-deploy.yml     ──► Coordinates all production deploys    │
+│  ├── chain-*.yml         ──► Blockchain infrastructure             │
+│  └── publisher-*.yml     ──► Content publishing services           │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Why This Strategy?
+
+1. **Fast dev iterations**: Dev deploys directly from feature repos for quick feedback
+2. **Coordinated releases**: Staging/prod via workspace ensures version compatibility
+3. **Single source of truth**: Workspace manages environment configs centrally
+4. **Reduced complexity**: Each repo only needs CI + dev deploy workflows
+
 ## Deployment Architecture
 
 ### Target Deployment
