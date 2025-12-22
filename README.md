@@ -116,7 +116,7 @@ Mystira Admin UI is a modern single-page application (SPA) built with React, Typ
 Before you begin, ensure you have the following installed:
 
 - **Node.js**: Version 18.x or higher ([Download](https://nodejs.org/))
-- **pnpm**: Version 8.x or higher ([Install](https://pnpm.io/installation))
+- **pnpm**: Version 9.x (specified in `package.json` as `packageManager`) ([Install](https://pnpm.io/installation))
 - **Git**: For version control ([Download](https://git-scm.com/))
 - **Mystira Admin API**: Backend service must be running
 
