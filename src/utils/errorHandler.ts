@@ -130,6 +130,11 @@ export async function retryWithBackoff<T>(
   maxRetries = 3,
   baseDelay = 1000
 ): Promise<T> {
+  // Handle edge case: if maxRetries is 0 or negative, execute once without retry
+  if (maxRetries <= 0) {
+    return await fn();
+  }
+
   let lastError: unknown;
 
   for (let i = 0; i < maxRetries; i++) {
