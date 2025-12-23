@@ -1,4 +1,4 @@
-name: Deploy to Dev
+name: Build Dev Artifact
 
 on:
   push:
@@ -18,67 +18,66 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: "20.x"
+  NODE_VERSION: "20"
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to Dev
+  build:
+    name: Build Dev Artifact
     runs-on: ubuntu-latest
     environment:
       name: dev
-      url: ${{ steps.deploy.outputs.static_web_app_url }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: npm run test
+        run: pnpm test
 
       - name: Build for dev
-        run: npm run build
+        run: pnpm build
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL_DEV }}
           VITE_ENVIRONMENT: dev
 
-      - name: Deploy to Azure Static Web Apps
-        id: deploy
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DEV }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "/"
-          output_location: "dist"
-          skip_app_build: true
+          name: admin-ui-dist-dev
+          path: dist
+          retention-days: 7
 
-      - name: Post deployment summary
+      - name: Post build summary
         run: |
-          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment:** Dev" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL:** ${{ steps.deploy.outputs.static_web_app_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact:** admin-ui-dist-dev" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> Deployment to k8s is handled by mystira.workspace" >> $GITHUB_STEP_SUMMARY
 
   notify:
     name: Notify
     runs-on: ubuntu-latest
-    needs: build-and-deploy
+    needs: build
     if: always()
     steps:
-      - name: Deployment notification
+      - name: Build notification
         run: |
-          if [ "${{ needs.build-and-deploy.result }}" == "success" ]; then
-            echo "✅ Admin UI deployed to dev successfully"
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "✅ Admin UI dev build completed successfully"
           else
-            echo "❌ Admin UI deployment to dev failed"
+            echo "❌ Admin UI dev build failed"
             exit 1
           fi

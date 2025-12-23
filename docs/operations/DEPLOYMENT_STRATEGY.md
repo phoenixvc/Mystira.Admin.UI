@@ -26,7 +26,8 @@ The Mystira platform uses a distributed deployment strategy across repositories:
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        DEVELOPMENT                                  │
 ├─────────────────────────────────────────────────────────────────────┤
-│  Admin.UI      ──► deploy-dev.yml ──► Azure Static Web Apps (Dev)  │
+│  Admin.UI      ──► deploy-dev.yml ──► Build artifact ──► k8s (via  │
+│                                        workspace)                   │
 │  Mystira.App   ──► app-ci.yml     ──► Own deployment pipeline      │
 └─────────────────────────────────────────────────────────────────────┘
 
@@ -54,10 +55,9 @@ The Mystira platform uses a distributed deployment strategy across repositories:
 
 The Admin UI is a static SPA that can be deployed to:
 
-1. **Azure Static Web Apps** (Recommended)
+1. **Kubernetes (AKS)** - Dev/Staging/Prod via mystira.workspace
 2. **Azure Blob Storage + CDN**
-3. **Nginx container in AKS**
-4. **Any static file hosting**
+3. **Any static file hosting**
 
 ### Architecture Diagram
 
