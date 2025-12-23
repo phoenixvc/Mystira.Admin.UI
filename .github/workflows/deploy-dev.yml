@@ -76,9 +76,14 @@ jobs:
               event_type: 'admin-ui-deploy',
               client_payload: {
                 environment: 'dev',
-                ref: '${{ github.sha }}',
+                commit_sha: '${{ github.sha }}',
+                commit_message: ${{ toJSON(github.event.head_commit.message || github.event.pull_request.title || 'Update admin-ui') }},
+                submodule_path: 'packages/admin-ui',
+                update_submodule: true,
                 triggered_by: '${{ github.actor }}',
-                run_id: '${{ github.run_id }}',
+                source_repo: '${{ github.repository }}',
+                source_run_id: '${{ github.run_id }}',
+                source_run_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
                 pr_number: '${{ github.event.pull_request.number || '' }}'
               }
             });
