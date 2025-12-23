@@ -63,8 +63,8 @@ The Admin UI is a static SPA that can be deployed to:
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   User Browser  │────▶│  Azure CDN/SWA   │────▶│  Static Files   │
-└─────────────────┘     └──────────────────┘     │  (dist/)        │
+│   User Browser  │────▶│  AKS Ingress     │────▶│  Static Files   │
+└─────────────────┘     └──────────────────┘     │  (nginx/dist)   │
                                                   └─────────────────┘
                                                           │
                                                           │ API Calls
@@ -332,4 +332,5 @@ Set up alerts for:
 
 - [Testing Checklist](./TESTING_CHECKLIST.md)
 - [Rollback Procedure](./ROLLBACK_PROCEDURE.md)
-- [Azure Static Web Apps Docs](https://learn.microsoft.com/azure/static-web-apps/)
+- [Azure Kubernetes Service Docs](https://learn.microsoft.com/azure/aks/)
+- [mystira.workspace Repository](https://github.com/phoenixvc/Mystira.workspace)
