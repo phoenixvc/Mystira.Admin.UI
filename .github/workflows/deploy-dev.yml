@@ -69,7 +69,7 @@ jobs:
       - name: Trigger workspace deployment
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.WORKSPACE_DISPATCH_TOKEN }}
+          github-token: ${{ secrets.MYSTIRA_GITHUB_SUBMODULE_ACCESS_TOKEN }}
           script: |
             await github.rest.repos.createDispatchEvent({
               owner: 'phoenixvc',
