@@ -1,31 +1,24 @@
-name: Build Dev Artifact
+name: Deploy to Dev
 
 on:
   push:
     branches: [dev]
+  pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Target environment"
-        required: true
-        default: "dev"
-        type: choice
-        options:
-          - dev
 
 concurrency:
-  group: deploy-dev
-  cancel-in-progress: false
+  group: deploy-dev-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: "20"
 
 jobs:
   build:
-    name: Build Dev Artifact
+    name: Build
     runs-on: ubuntu-latest
-    environment:
-      name: dev
 
     steps:
       - uses: actions/checkout@v4
@@ -57,27 +50,45 @@ jobs:
           path: dist
           retention-days: 7
 
-      - name: Post build summary
+  deploy:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: dev
+      url: https://dev.admin.mystira.app
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: admin-ui-dist-dev
+          path: dist
+
+      - name: Trigger workspace deployment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.WORKSPACE_DISPATCH_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'phoenixvc',
+              repo: 'Mystira.workspace',
+              event_type: 'admin-ui-deploy',
+              client_payload: {
+                environment: 'dev',
+                ref: '${{ github.sha }}',
+                triggered_by: '${{ github.actor }}',
+                run_id: '${{ github.run_id }}',
+                pr_number: '${{ github.event.pull_request.number || '' }}'
+              }
+            });
+
+      - name: Post deployment summary
         run: |
-          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment:** Dev" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Artifact:** admin-ui-dist-dev" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL:** https://dev.admin.mystira.app" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> Deployment to k8s is handled by mystira.workspace" >> $GITHUB_STEP_SUMMARY
-
-  notify:
-    name: Notify
-    runs-on: ubuntu-latest
-    needs: build
-    if: always()
-    steps:
-      - name: Build notification
-        run: |
-          if [ "${{ needs.build.result }}" == "success" ]; then
-            echo "✅ Admin UI dev build completed successfully"
-          else
-            echo "❌ Admin UI dev build failed"
-            exit 1
-          fi
+          echo "> Deployment triggered via mystira.workspace" >> $GITHUB_STEP_SUMMARY
