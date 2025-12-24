@@ -6,6 +6,7 @@ This directory contains migration documentation for the Mystira Admin UI project
 
 - [Migration Phases](./phases.md) - Detailed migration progress tracking
 - [Migration Strategy](./strategy.md) - Technical approach and decisions
+- [Contracts Migration](./contracts-migration.md) - Guide for migrating to unified contracts packages
 
 ## Migration Overview
 
