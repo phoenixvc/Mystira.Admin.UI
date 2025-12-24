@@ -26,7 +26,8 @@ The Mystira platform uses a distributed deployment strategy across repositories:
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        DEVELOPMENT                                  │
 ├─────────────────────────────────────────────────────────────────────┤
-│  Admin.UI      ──► deploy-dev.yml ──► Azure Static Web Apps (Dev)  │
+│  Admin.UI      ──► deploy-dev.yml ──► Build artifact ──► k8s (via  │
+│                                        workspace)                   │
 │  Mystira.App   ──► app-ci.yml     ──► Own deployment pipeline      │
 └─────────────────────────────────────────────────────────────────────┘
 
@@ -54,17 +55,16 @@ The Mystira platform uses a distributed deployment strategy across repositories:
 
 The Admin UI is a static SPA that can be deployed to:
 
-1. **Azure Static Web Apps** (Recommended)
+1. **Kubernetes (AKS)** - Dev/Staging/Prod via mystira.workspace
 2. **Azure Blob Storage + CDN**
-3. **Nginx container in AKS**
-4. **Any static file hosting**
+3. **Any static file hosting**
 
 ### Architecture Diagram
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   User Browser  │────▶│  Azure CDN/SWA   │────▶│  Static Files   │
-└─────────────────┘     └──────────────────┘     │  (dist/)        │
+│   User Browser  │────▶│  AKS Ingress     │────▶│  Static Files   │
+└─────────────────┘     └──────────────────┘     │  (nginx/dist)   │
                                                   └─────────────────┘
                                                           │
                                                           │ API Calls
@@ -332,4 +332,5 @@ Set up alerts for:
 
 - [Testing Checklist](./TESTING_CHECKLIST.md)
 - [Rollback Procedure](./ROLLBACK_PROCEDURE.md)
-- [Azure Static Web Apps Docs](https://learn.microsoft.com/azure/static-web-apps/)
+- [Azure Kubernetes Service Docs](https://learn.microsoft.com/azure/aks/)
+- [mystira.workspace Repository](https://github.com/phoenixvc/Mystira.workspace)
