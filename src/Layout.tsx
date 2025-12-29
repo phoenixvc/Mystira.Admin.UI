@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "./auth";
+import { ThemeSelector } from "./components/ThemeSelector";
 
 function Layout() {
   const { logout } = useAuth();
@@ -104,7 +105,10 @@ function Layout() {
                   </ul>
                 </li>
               </ul>
-              <ul className="navbar-nav">
+              <ul className="navbar-nav align-items-center">
+                <li className="nav-item">
+                  <ThemeSelector />
+                </li>
                 <li className="nav-item">
                   <button
                     id="logoutBtn"
