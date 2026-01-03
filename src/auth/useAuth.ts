@@ -3,10 +3,35 @@ import { InteractionStatus } from "@azure/msal-browser";
 import { useCallback } from "react";
 import { loginRequest, tokenRequest } from "./msalConfig";
 
+const BYPASS_AUTH = import.meta.env.VITE_BYPASS_AUTH === "true";
+
 export function useAuth() {
   const { instance, inProgress, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
   const account = useAccount(accounts[0]);
+
+  // Bypass authentication if environment variable is set
+  if (BYPASS_AUTH) {
+    return {
+      isAuthenticated: true,
+      isLoading: false,
+      user: {
+        username: "dev-user",
+        name: "Development User",
+        localAccountId: "bypass-auth-user",
+      },
+      login: async () => {
+        console.log("Auth bypass enabled - login skipped");
+      },
+      logout: async () => {
+        console.log("Auth bypass enabled - logout skipped");
+      },
+      getAccessToken: async () => {
+        console.log("Auth bypass enabled - returning null token");
+        return null;
+      },
+    };
+  }
 
   const login = useCallback(async () => {
     if (inProgress !== InteractionStatus.None) return;
