@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { msalInstance } from "../auth/msalInstance";
 import { tokenRequest } from "../auth";
+import { BYPASS_AUTH } from "../auth/msalConfig";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -14,6 +15,14 @@ export const apiClient = axios.create({
 // Request interceptor to add MSAL access token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // If bypassing auth, add a dev token header or skip authentication
+    if (BYPASS_AUTH) {
+      if (config.headers) {
+        config.headers.Authorization = "Bearer dev-token";
+      }
+      return config;
+    }
+
     const account = msalInstance.getActiveAccount();
 
     if (account) {
