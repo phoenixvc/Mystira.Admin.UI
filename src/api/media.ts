@@ -28,14 +28,14 @@ export const mediaApi = {
     request?: MediaQueryRequest
   ): Promise<MediaQueryResponse> => {
     const response = await apiClient.get<MediaQueryResponse>(
-      "/api/admin/mediaadmin",
+      "/api/admin/media",
       { params: request }
     );
     return response.data;
   },
 
   getMediaFile: async (mediaId: string): Promise<Blob> => {
-    const response = await apiClient.get(`/api/admin/mediaadmin/${mediaId}`, {
+    const response = await apiClient.get(`/api/admin/media/${mediaId}`, {
       responseType: "blob",
     });
     return response.data;
@@ -52,7 +52,7 @@ export const mediaApi = {
     }
 
     const response = await apiClient.post<MediaAsset>(
-      "/api/admin/mediaadmin/upload",
+      "/api/admin/media/upload",
       formData,
       {
         headers: {
@@ -83,7 +83,7 @@ export const mediaApi = {
       message: string;
       processedFiles: number;
       errors: string[];
-    }>("/api/admin/mediaadmin/upload-zip", formData, {
+    }>("/api/admin/media/upload-zip", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -92,6 +92,6 @@ export const mediaApi = {
   },
 
   deleteMedia: async (mediaId: string): Promise<void> => {
-    await apiClient.delete(`/api/admin/mediaadmin/${mediaId}`);
+    await apiClient.delete(`/api/admin/media/${mediaId}`);
   },
 };

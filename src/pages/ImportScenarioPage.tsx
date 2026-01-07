@@ -5,6 +5,7 @@ import { scenariosApi } from "../api/scenarios";
 import Alert from "../components/Alert";
 import Card from "../components/Card";
 import Checkbox from "../components/Checkbox";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import FileInput from "../components/FileInput";
 import ValidationResults from "../components/ValidationResults";
 import { useFileValidation } from "../hooks/useFileValidation";
@@ -29,7 +30,7 @@ function ImportScenarioPage() {
     },
   });
 
-  const { uploading, uploadFile } = useFileUpload({
+  const { uploading, uploadFile, confirmationProps } = useFileUpload({
     onUpload: async (file) => {
       await uploadMutation.mutateAsync(file);
     },
@@ -150,6 +151,8 @@ function ImportScenarioPage() {
           <ValidationResults valid={validationResult.valid} errors={validationResult.errors} />
         </Card>
       )}
+
+      <ConfirmationDialog {...confirmationProps} />
     </div>
   );
 }
