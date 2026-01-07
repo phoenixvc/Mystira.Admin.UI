@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { errorReportingService } from "../services/errorReporting";
 import { showToast } from "./toast";
 
 export interface ApiError {
@@ -66,13 +67,13 @@ export function handleApiError(error: unknown, customMessage?: string): void {
 
   showToast.error(message);
 
-  // Log to console in development
-  if (import.meta.env.DEV) {
-    console.error("API Error:", apiError);
-  }
-
-  // TODO: Log to error reporting service
-  // logErrorToService(apiError);
+  // Report to error reporting service
+  errorReportingService.reportApiError(
+    apiError.message,
+    apiError.status,
+    apiError.code,
+    { source: "handleApiError", extra: { details: apiError.details } }
+  );
 }
 
 /**

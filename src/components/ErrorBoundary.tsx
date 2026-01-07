@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react";
+import { errorReportingService } from "../services/errorReporting";
 import ErrorDisplay from "./ErrorDisplay";
 
 interface ErrorBoundaryProps {
@@ -31,11 +32,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to console in development
-    if (import.meta.env.DEV) {
-      console.error("ErrorBoundary caught an error:", error, errorInfo);
-    }
-
     // Call optional error handler
     this.props.onError?.(error, errorInfo);
 
@@ -44,8 +40,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       errorInfo,
     });
 
-    // TODO: Log to error reporting service (e.g., Sentry, LogRocket)
-    // logErrorToService(error, errorInfo);
+    // Report to error reporting service
+    errorReportingService.reportBoundaryError(error, errorInfo, {
+      source: "ErrorBoundary",
+      route: window.location.pathname,
+    });
   }
 
   handleReset = (): void => {
