@@ -15,7 +15,6 @@ export interface CreateScenarioRequest {
   description?: string;
   ageRating: number;
   tags?: string[];
-  // Add other scenario fields as needed
 }
 
 export interface ScenarioQueryRequest {

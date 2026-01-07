@@ -83,7 +83,10 @@ All pages are integrated with the Admin API endpoints:
 - `/api/admin/media`
 - `/api/admin/badges`
 - `/api/admin/bundles`
+- `/api/admin/avatars`
 - `/api/admin/charactermaps`
+- `/api/admin/accounts` (read-only)
+- `/api/admin/profiles` (read-only)
 - `/api/admin/agegroups`
 - `/api/admin/archetypes`
 - `/api/admin/compassaxes`
