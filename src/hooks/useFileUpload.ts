@@ -20,6 +20,16 @@ export function useFileUpload({ onUpload, validationResult }: UseFileUploadOptio
     type: null,
   });
 
+  const performUpload = useCallback(async (file: File) => {
+    setUploading(true);
+    try {
+      await onUpload(file);
+    } finally {
+      setUploading(false);
+      setPendingFile(null);
+    }
+  }, [onUpload]);
+
   const uploadFile = useCallback(async (file: File) => {
     if (!file) {
       return;
@@ -44,24 +54,14 @@ export function useFileUpload({ onUpload, validationResult }: UseFileUploadOptio
 
     // Validation passed, proceed with upload
     await performUpload(file);
-  }, [validationResult]);
-
-  const performUpload = async (file: File) => {
-    setUploading(true);
-    try {
-      await onUpload(file);
-    } finally {
-      setUploading(false);
-      setPendingFile(null);
-    }
-  };
+  }, [validationResult, performUpload]);
 
   const confirmUpload = useCallback(async () => {
     setConfirmation({ isOpen: false, type: null });
     if (pendingFile) {
       await performUpload(pendingFile);
     }
-  }, [pendingFile]);
+  }, [pendingFile, performUpload]);
 
   const cancelUpload = useCallback(() => {
     setConfirmation({ isOpen: false, type: null });

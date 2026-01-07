@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 export interface ConfirmationOptions {
   title: string;
@@ -10,7 +10,6 @@ export interface ConfirmationOptions {
 
 export interface ConfirmationState extends ConfirmationOptions {
   isOpen: boolean;
-  resolve: ((value: boolean) => void) | null;
 }
 
 const defaultOptions: ConfirmationOptions = {
@@ -50,29 +49,31 @@ export function useConfirmation() {
   const [state, setState] = useState<ConfirmationState>({
     ...defaultOptions,
     isOpen: false,
-    resolve: null,
   });
+  const resolveRef = useRef<((value: boolean) => void) | null>(null);
 
   const confirm = useCallback((options: Partial<ConfirmationOptions> = {}): Promise<boolean> => {
     return new Promise((resolve) => {
+      resolveRef.current = resolve;
       setState({
         ...defaultOptions,
         ...options,
         isOpen: true,
-        resolve,
       });
     });
   }, []);
 
   const handleConfirm = useCallback(() => {
-    state.resolve?.(true);
-    setState((prev) => ({ ...prev, isOpen: false, resolve: null }));
-  }, [state.resolve]);
+    resolveRef.current?.(true);
+    resolveRef.current = null;
+    setState((prev) => ({ ...prev, isOpen: false }));
+  }, []);
 
   const handleCancel = useCallback(() => {
-    state.resolve?.(false);
-    setState((prev) => ({ ...prev, isOpen: false, resolve: null }));
-  }, [state.resolve]);
+    resolveRef.current?.(false);
+    resolveRef.current = null;
+    setState((prev) => ({ ...prev, isOpen: false }));
+  }, []);
 
   const confirmationProps = {
     isOpen: state.isOpen,
