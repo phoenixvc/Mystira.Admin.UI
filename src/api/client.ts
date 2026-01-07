@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
-import { msalInstance } from "../auth/msalInstance";
 import { tokenRequest } from "../auth";
 import { BYPASS_AUTH } from "../auth/msalConfig";
+import { msalInstance } from "../auth/msalInstance";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
