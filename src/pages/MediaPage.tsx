@@ -139,7 +139,7 @@ function MediaPage() {
                         <td>
                           <div className="btn-group btn-group-sm">
                             <a
-                              href={`/api/admin/mediaadmin/${media.id}`}
+                              href={`/api/admin/media/${media.id}`}
                               className="btn btn-outline-primary"
                               target="_blank"
                               rel="noopener noreferrer"

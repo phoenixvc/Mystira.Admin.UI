@@ -24,14 +24,14 @@ export interface BundleQueryResponse {
 
 export const bundlesApi = {
   getBundles: async (request?: BundleQueryRequest): Promise<BundleQueryResponse> => {
-    const response = await apiClient.get<BundleQueryResponse>("/api/admin/bundlesadmin", {
+    const response = await apiClient.get<BundleQueryResponse>("/api/admin/bundles", {
       params: request,
     });
     return response.data;
   },
 
   getBundle: async (id: string): Promise<Bundle> => {
-    const response = await apiClient.get<Bundle>(`/api/admin/bundlesadmin/${id}`);
+    const response = await apiClient.get<Bundle>(`/api/admin/bundles/${id}`);
     return response.data;
   },
 
@@ -42,7 +42,7 @@ export const bundlesApi = {
     const response = await apiClient.post<{
       success: boolean;
       result: unknown;
-    }>("/admin/bundles/validate", formData, {
+    }>("/api/admin/bundles/validate", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -63,7 +63,7 @@ export const bundlesApi = {
     const response = await apiClient.post<{
       success: boolean;
       result: unknown;
-    }>("/admin/bundles/upload", formData, {
+    }>("/api/admin/bundles/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -72,16 +72,16 @@ export const bundlesApi = {
   },
 
   createBundle: async (bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">): Promise<Bundle> => {
-    const response = await apiClient.post<Bundle>("/api/admin/bundlesadmin", bundle);
+    const response = await apiClient.post<Bundle>("/api/admin/bundles", bundle);
     return response.data;
   },
 
   updateBundle: async (id: string, bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">): Promise<Bundle> => {
-    const response = await apiClient.put<Bundle>(`/api/admin/bundlesadmin/${id}`, bundle);
+    const response = await apiClient.put<Bundle>(`/api/admin/bundles/${id}`, bundle);
     return response.data;
   },
 
   deleteBundle: async (id: string): Promise<void> => {
-    await apiClient.delete(`/api/admin/bundlesadmin/${id}`);
+    await apiClient.delete(`/api/admin/bundles/${id}`);
   },
 };

@@ -1,12 +1,13 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Layout from "./Layout";
+import AccountsPage from "./pages/AccountsPage";
+import AvatarsPage from "./pages/AvatarsPage";
 import BadgesPage from "./pages/BadgesPage";
 import BundlesPage from "./pages/BundlesPage";
+import CharacterMapsPage from "./pages/CharacterMapsPage";
 import CreateBundlePage from "./pages/CreateBundlePage";
 import EditBundlePage from "./pages/EditBundlePage";
-import AvatarsPage from "./pages/AvatarsPage";
-import CharacterMapsPage from "./pages/CharacterMapsPage";
 import CreateBadgePage from "./pages/CreateBadgePage";
 import CreateCharacterMapPage from "./pages/CreateCharacterMapPage";
 import CreateMasterDataPage from "./pages/CreateMasterDataPage";
@@ -27,6 +28,7 @@ import LoginPage from "./pages/LoginPage";
 import MasterDataPage from "./pages/MasterDataPage";
 import MediaPage from "./pages/MediaPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ProfilesPage from "./pages/ProfilesPage";
 import ScenariosPage from "./pages/ScenariosPage";
 import ValidateScenariosPage from "./pages/ValidateScenariosPage";
 import ProtectedRoute from "./ProtectedRoute";
@@ -72,6 +74,8 @@ function App() {
             <Route path="admin/master-data/:type" element={<MasterDataPage />} errorElement={<ErrorPage />} />
             <Route path="admin/master-data/:type/create" element={<CreateMasterDataPage />} errorElement={<ErrorPage />} />
             <Route path="admin/master-data/:type/edit/:id" element={<EditMasterDataPage />} errorElement={<ErrorPage />} />
+            <Route path="admin/accounts" element={<AccountsPage />} errorElement={<ErrorPage />} />
+            <Route path="admin/profiles" element={<ProfilesPage />} errorElement={<ErrorPage />} />
           </Route>
           {/* 404 catch-all route */}
           <Route path="*" element={<NotFoundPage />} />

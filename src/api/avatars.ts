@@ -11,12 +11,12 @@ export interface AvatarConfigurationFile {
 
 export const avatarsApi = {
   getAllAvatars: async (): Promise<AvatarConfigurationFile> => {
-    const response = await apiClient.get<AvatarConfigurationFile>("/api/admin/avataradmin");
+    const response = await apiClient.get<AvatarConfigurationFile>("/api/admin/avatars");
     return response.data;
   },
 
   getAvatarsForAgeGroup: async (ageGroup: string): Promise<string[]> => {
-    const response = await apiClient.get<string[]>(`/api/admin/avataradmin/${ageGroup}`);
+    const response = await apiClient.get<string[]>(`/api/admin/avatars/${ageGroup}`);
     return response.data;
   },
 
@@ -25,7 +25,7 @@ export const avatarsApi = {
     mediaIds: string[]
   ): Promise<AvatarConfigurationFile> => {
     const response = await apiClient.post<AvatarConfigurationFile>(
-      `/api/admin/avataradmin/${ageGroup}`,
+      `/api/admin/avatars/${ageGroup}`,
       mediaIds
     );
     return response.data;
@@ -36,7 +36,7 @@ export const avatarsApi = {
     mediaId: string
   ): Promise<AvatarConfigurationFile> => {
     const response = await apiClient.post<AvatarConfigurationFile>(
-      `/api/admin/avataradmin/${ageGroup}/add`,
+      `/api/admin/avatars/${ageGroup}/add`,
       JSON.stringify(mediaId),
       {
         headers: {
@@ -52,7 +52,7 @@ export const avatarsApi = {
     mediaId: string
   ): Promise<AvatarConfigurationFile> => {
     const response = await apiClient.delete<AvatarConfigurationFile>(
-      `/api/admin/avataradmin/${ageGroup}/remove/${mediaId}`
+      `/api/admin/avatars/${ageGroup}/remove/${mediaId}`
     );
     return response.data;
   },
