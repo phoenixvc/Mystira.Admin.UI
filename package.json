@@ -4,7 +4,7 @@
   "private": true,
   "description": "Mystira.Admin.UI - Admin Frontend Application",
   "type": "module",
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=9.0.0"
