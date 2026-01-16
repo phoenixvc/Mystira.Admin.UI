@@ -1,4 +1,4 @@
-name: "Admin UI: Build & Deploy Dev"
+name: "[Deploy] Admin UI Dev"
 
 on:
   push:
