@@ -36,12 +36,12 @@ export function useFileValidation(options?: UseFileValidationOptions) {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to parse file";
       showToast.error(`Parse error: ${errorMessage}`);
-      
+
       const errorResult: ValidationResult = {
         valid: false,
         errors: [{ path: "root", message: errorMessage }],
       };
-      
+
       setValidationResult(errorResult);
       options?.onValidationComplete?.(errorResult);
     } finally {
@@ -65,10 +65,10 @@ function parseFileContent(content: string, filename: string): unknown {
   if (filename.endsWith(".json")) {
     return JSON.parse(content);
   }
-  
+
   if (filename.endsWith(".yaml") || filename.endsWith(".yml")) {
     return yaml.load(content);
   }
-  
+
   throw new Error("Unsupported file format. Please use .json, .yaml, or .yml files.");
 }

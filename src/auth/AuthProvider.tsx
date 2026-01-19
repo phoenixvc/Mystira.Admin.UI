@@ -16,7 +16,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const initializeMsal = async () => {
       // If bypassing auth, skip MSAL initialization
       if (BYPASS_AUTH) {
-        console.warn("⚠️ Authentication bypassed - BYPASS_AUTH is enabled. This should only be used in development.");
+        console.warn(
+          "⚠️ Authentication bypassed - BYPASS_AUTH is enabled. This should only be used in development."
+        );
         setIsInitialized(true);
         return;
       }
@@ -71,7 +73,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   if (!isInitialized) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -81,7 +86,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   if (configError) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-md-6">
@@ -98,10 +106,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     <h5>To fix this issue:</h5>
                     <ol>
                       <li>
-                        <strong>For production:</strong> Set <code>VITE_AZURE_CLIENT_ID</code> in your environment variables
+                        <strong>For production:</strong> Set <code>VITE_AZURE_CLIENT_ID</code> in
+                        your environment variables
                       </li>
                       <li>
-                        <strong>For development:</strong> Set <code>VITE_BYPASS_AUTH=true</code> in your <code>.env</code> file
+                        <strong>For development:</strong> Set <code>VITE_BYPASS_AUTH=true</code> in
+                        your <code>.env</code> file
                       </li>
                     </ol>
                     <p className="text-muted mt-3">

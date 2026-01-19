@@ -50,30 +50,110 @@ function App() {
           >
             <Route index element={<Navigate to="/admin" replace />} />
             <Route path="admin" element={<DashboardPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/scenarios" element={<ScenariosPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/scenarios/import" element={<ImportScenarioPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/scenarios/create" element={<CreateScenarioPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/scenarios/edit/:id" element={<EditScenarioPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/scenarios/validate" element={<ValidateScenariosPage />} errorElement={<ErrorPage />} />
+            <Route
+              path="admin/scenarios"
+              element={<ScenariosPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/scenarios/import"
+              element={<ImportScenarioPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/scenarios/create"
+              element={<CreateScenarioPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/scenarios/edit/:id"
+              element={<EditScenarioPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/scenarios/validate"
+              element={<ValidateScenariosPage />}
+              errorElement={<ErrorPage />}
+            />
             <Route path="admin/media" element={<MediaPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/media/import" element={<ImportMediaPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/media/import-zip" element={<ImportMediaZipPage />} errorElement={<ErrorPage />} />
+            <Route
+              path="admin/media/import"
+              element={<ImportMediaPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/media/import-zip"
+              element={<ImportMediaZipPage />}
+              errorElement={<ErrorPage />}
+            />
             <Route path="admin/badges" element={<BadgesPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/badges/import" element={<ImportBadgePage />} errorElement={<ErrorPage />} />
-            <Route path="admin/badges/create" element={<CreateBadgePage />} errorElement={<ErrorPage />} />
-            <Route path="admin/badges/edit/:id" element={<EditBadgePage />} errorElement={<ErrorPage />} />
+            <Route
+              path="admin/badges/import"
+              element={<ImportBadgePage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/badges/create"
+              element={<CreateBadgePage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/badges/edit/:id"
+              element={<EditBadgePage />}
+              errorElement={<ErrorPage />}
+            />
             <Route path="admin/bundles" element={<BundlesPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/bundles/create" element={<CreateBundlePage />} errorElement={<ErrorPage />} />
-            <Route path="admin/bundles/edit/:id" element={<EditBundlePage />} errorElement={<ErrorPage />} />
-            <Route path="admin/bundles/import" element={<ImportBundlePage />} errorElement={<ErrorPage />} />
+            <Route
+              path="admin/bundles/create"
+              element={<CreateBundlePage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/bundles/edit/:id"
+              element={<EditBundlePage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/bundles/import"
+              element={<ImportBundlePage />}
+              errorElement={<ErrorPage />}
+            />
             <Route path="admin/avatars" element={<AvatarsPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/character-maps" element={<CharacterMapsPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/character-maps/import" element={<ImportCharacterMapPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/character-maps/create" element={<CreateCharacterMapPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/character-maps/edit/:id" element={<EditCharacterMapPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/master-data/:type" element={<MasterDataPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/master-data/:type/create" element={<CreateMasterDataPage />} errorElement={<ErrorPage />} />
-            <Route path="admin/master-data/:type/edit/:id" element={<EditMasterDataPage />} errorElement={<ErrorPage />} />
+            <Route
+              path="admin/character-maps"
+              element={<CharacterMapsPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/character-maps/import"
+              element={<ImportCharacterMapPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/character-maps/create"
+              element={<CreateCharacterMapPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/character-maps/edit/:id"
+              element={<EditCharacterMapPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/master-data/:type"
+              element={<MasterDataPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/master-data/:type/create"
+              element={<CreateMasterDataPage />}
+              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="admin/master-data/:type/edit/:id"
+              element={<EditMasterDataPage />}
+              errorElement={<ErrorPage />}
+            />
             <Route path="admin/accounts" element={<AccountsPage />} errorElement={<ErrorPage />} />
             <Route path="admin/profiles" element={<ProfilesPage />} errorElement={<ErrorPage />} />
           </Route>

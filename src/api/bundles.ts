@@ -76,7 +76,10 @@ export const bundlesApi = {
     return response.data;
   },
 
-  updateBundle: async (id: string, bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">): Promise<Bundle> => {
+  updateBundle: async (
+    id: string,
+    bundle: Omit<Bundle, "id" | "createdAt" | "updatedAt">
+  ): Promise<Bundle> => {
     const response = await apiClient.put<Bundle>(`/api/admin/bundles/${id}`, bundle);
     return response.data;
   },

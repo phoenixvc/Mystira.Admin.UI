@@ -42,11 +42,12 @@ Component Stack:
 ${errorInfo?.componentStack || "No component stack available"}
     `.trim();
 
-    navigator.clipboard.writeText(errorText)
+    navigator.clipboard
+      .writeText(errorText)
       .then(() => {
         alert("Error details copied to clipboard");
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Failed to copy to clipboard:", err);
         // Fallback for non-secure contexts or clipboard access denied
         try {
@@ -78,7 +79,10 @@ ${errorInfo?.componentStack || "No component stack available"}
         <div className="col-lg-8">
           <Card>
             <div className="text-center mb-4">
-              <i className="bi bi-exclamation-triangle-fill text-danger" style={{ fontSize: "4rem" }}></i>
+              <i
+                className="bi bi-exclamation-triangle-fill text-danger"
+                style={{ fontSize: "4rem" }}
+              ></i>
               <h1 className="h2 mt-3">Something went wrong</h1>
               <p className="text-muted">
                 We encountered an unexpected error. Please try again or contact support if the
@@ -104,7 +108,10 @@ ${errorInfo?.componentStack || "No component stack available"}
                   <>
                     <div className="mb-3">
                       <h6>Stack Trace</h6>
-                      <pre className="bg-light p-3 border rounded" style={{ fontSize: "0.85rem", maxHeight: "300px", overflow: "auto" }}>
+                      <pre
+                        className="bg-light p-3 border rounded"
+                        style={{ fontSize: "0.85rem", maxHeight: "300px", overflow: "auto" }}
+                      >
                         <code>{error.stack || "No stack trace available"}</code>
                       </pre>
                     </div>
@@ -112,7 +119,10 @@ ${errorInfo?.componentStack || "No component stack available"}
                     {errorInfo?.componentStack && (
                       <div className="mb-3">
                         <h6>Component Stack</h6>
-                        <pre className="bg-light p-3 border rounded" style={{ fontSize: "0.85rem", maxHeight: "300px", overflow: "auto" }}>
+                        <pre
+                          className="bg-light p-3 border rounded"
+                          style={{ fontSize: "0.85rem", maxHeight: "300px", overflow: "auto" }}
+                        >
                           <code>{errorInfo.componentStack}</code>
                         </pre>
                       </div>

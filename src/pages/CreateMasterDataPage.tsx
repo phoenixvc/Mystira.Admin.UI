@@ -212,7 +212,9 @@ function CreateMasterDataPage() {
               <>
                 <FormField
                   label="Minimum Age"
-                  error={(errors as Record<string, { message?: string } | undefined>).minAge?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).minAge?.message
+                  }
                   helpText="Minimum age for this group (0-100)"
                 >
                   <NumberInput
@@ -225,7 +227,9 @@ function CreateMasterDataPage() {
 
                 <FormField
                   label="Maximum Age"
-                  error={(errors as Record<string, { message?: string } | undefined>).maxAge?.message}
+                  error={
+                    (errors as Record<string, { message?: string } | undefined>).maxAge?.message
+                  }
                   helpText="Maximum age for this group (0-100)"
                 >
                   <NumberInput

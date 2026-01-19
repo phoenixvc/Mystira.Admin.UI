@@ -20,7 +20,10 @@ function NotFoundPage() {
           <Card>
             <div className="text-center">
               <div className="mb-4">
-                <i className="bi bi-signpost-split-fill text-warning" style={{ fontSize: "5rem" }}></i>
+                <i
+                  className="bi bi-signpost-split-fill text-warning"
+                  style={{ fontSize: "5rem" }}
+                ></i>
               </div>
               <h1 className="display-1 fw-bold text-primary">404</h1>
               <h2 className="h3 mb-3">Page Not Found</h2>
@@ -50,19 +53,34 @@ function NotFoundPage() {
               <div className="mt-4">
                 <h6 className="text-muted mb-3">Quick Links</h6>
                 <div className="d-flex flex-wrap gap-2 justify-content-center">
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => navigate("/admin/scenarios")}>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate("/admin/scenarios")}
+                  >
                     Scenarios
                   </button>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => navigate("/admin/media")}>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate("/admin/media")}
+                  >
                     Media
                   </button>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => navigate("/admin/badges")}>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate("/admin/badges")}
+                  >
                     Badges
                   </button>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => navigate("/admin/bundles")}>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate("/admin/bundles")}
+                  >
                     Bundles
                   </button>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => navigate("/admin/avatars")}>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => navigate("/admin/avatars")}
+                  >
                     Avatars
                   </button>
                 </div>

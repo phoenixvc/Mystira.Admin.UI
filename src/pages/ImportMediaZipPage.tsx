@@ -75,9 +75,7 @@ function ImportMediaZipPage() {
       <div className="card mb-3">
         <div className="card-body">
           <h5 className="card-title">ZIP File Requirements</h5>
-          <p className="card-text">
-            The ZIP file must contain:
-          </p>
+          <p className="card-text">The ZIP file must contain:</p>
           <ul>
             <li>
               <code>media-metadata.json</code> - A JSON file containing media metadata with image

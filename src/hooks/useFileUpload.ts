@@ -20,41 +20,47 @@ export function useFileUpload({ onUpload, validationResult }: UseFileUploadOptio
     type: null,
   });
 
-  const performUpload = useCallback(async (file: File) => {
-    setUploading(true);
-    try {
-      await onUpload(file);
-    } finally {
-      setUploading(false);
-      setPendingFile(null);
-    }
-  }, [onUpload]);
+  const performUpload = useCallback(
+    async (file: File) => {
+      setUploading(true);
+      try {
+        await onUpload(file);
+      } finally {
+        setUploading(false);
+        setPendingFile(null);
+      }
+    },
+    [onUpload]
+  );
 
-  const uploadFile = useCallback(async (file: File) => {
-    if (!file) {
-      return;
-    }
+  const uploadFile = useCallback(
+    async (file: File) => {
+      if (!file) {
+        return;
+      }
 
-    // Check if validation is required
-    if (!validationResult) {
-      setPendingFile(file);
-      setConfirmation({ isOpen: true, type: "no-validation" });
-      return;
-    }
+      // Check if validation is required
+      if (!validationResult) {
+        setPendingFile(file);
+        setConfirmation({ isOpen: true, type: "no-validation" });
+        return;
+      }
 
-    if (!validationResult.valid) {
-      setPendingFile(file);
-      setConfirmation({
-        isOpen: true,
-        type: "validation-failed",
-        errorCount: validationResult.errors.length,
-      });
-      return;
-    }
+      if (!validationResult.valid) {
+        setPendingFile(file);
+        setConfirmation({
+          isOpen: true,
+          type: "validation-failed",
+          errorCount: validationResult.errors.length,
+        });
+        return;
+      }
 
-    // Validation passed, proceed with upload
-    await performUpload(file);
-  }, [validationResult, performUpload]);
+      // Validation passed, proceed with upload
+      await performUpload(file);
+    },
+    [validationResult, performUpload]
+  );
 
   const confirmUpload = useCallback(async () => {
     setConfirmation({ isOpen: false, type: null });
@@ -70,7 +76,8 @@ export function useFileUpload({ onUpload, validationResult }: UseFileUploadOptio
 
   const confirmationProps = {
     isOpen: confirmation.isOpen,
-    title: confirmation.type === "no-validation" ? "Upload Without Validation?" : "Upload With Errors?",
+    title:
+      confirmation.type === "no-validation" ? "Upload Without Validation?" : "Upload With Errors?",
     message:
       confirmation.type === "no-validation"
         ? "You haven't validated the file yet. Do you want to upload without validation?"
