@@ -330,7 +330,7 @@ console.log('Uploaded:', result.uploaded);
 console.log('Failed:', result.failed);
 ```
 
-**Endpoint**: `POST /api/admin/mediaadmin/upload-zip`
+**Endpoint**: `POST /api/admin/media/upload-zip`
 
 **Content-Type**: `multipart/form-data`
 

@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "./auth";
+import { ThemeSelector } from "./components/ThemeSelector";
 
 function Layout() {
   const { logout } = useAuth();
@@ -103,8 +104,34 @@ function Layout() {
                     </li>
                   </ul>
                 </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Users
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <Link className="dropdown-item" to="/admin/accounts">
+                        Accounts
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/admin/profiles">
+                        Profiles
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
               </ul>
-              <ul className="navbar-nav">
+              <ul className="navbar-nav align-items-center">
+                <li className="nav-item">
+                  <ThemeSelector />
+                </li>
                 <li className="nav-item">
                   <button
                     id="logoutBtn"

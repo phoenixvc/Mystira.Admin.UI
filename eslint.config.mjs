@@ -3,7 +3,6 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import globals from "globals";
 
 export default [
   { ignores: ["dist", "node_modules"] },
@@ -31,6 +30,12 @@ export default [
         HTMLTextAreaElement: "readonly",
         HTMLDivElement: "readonly",
         React: "readonly",
+        alert: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        fetch: "readonly",
         // Node globals
         __dirname: "readonly",
         __filename: "readonly",

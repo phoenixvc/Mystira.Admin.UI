@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { scenariosApi, ScenarioReferenceValidation } from "../api/scenarios";
@@ -10,7 +10,6 @@ function ValidateScenariosPage() {
     null
   );
   const [isValidating, setIsValidating] = useState(false);
-  const queryClient = useQueryClient();
 
   const validateMutation = useMutation({
     mutationFn: (includeMetadata: boolean) =>
@@ -26,9 +25,7 @@ function ValidateScenariosPage() {
       }
     },
     onError: error => {
-      showToast.error(
-        error instanceof Error ? error.message : "Failed to validate scenarios"
-      );
+      showToast.error(error instanceof Error ? error.message : "Failed to validate scenarios");
       setIsValidating(false);
     },
   });
@@ -94,11 +91,7 @@ function ValidateScenariosPage() {
             </div>
           </div>
 
-          <button
-            className="btn btn-primary"
-            onClick={handleValidate}
-            disabled={isValidating}
-          >
+          <button className="btn btn-primary" onClick={handleValidate} disabled={isValidating}>
             {isValidating ? (
               <>
                 <span

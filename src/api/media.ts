@@ -24,42 +24,32 @@ export interface MediaQueryResponse {
 }
 
 export const mediaApi = {
-  getMedia: async (
-    request?: MediaQueryRequest
-  ): Promise<MediaQueryResponse> => {
-    const response = await apiClient.get<MediaQueryResponse>(
-      "/api/admin/mediaadmin",
-      { params: request }
-    );
+  getMedia: async (request?: MediaQueryRequest): Promise<MediaQueryResponse> => {
+    const response = await apiClient.get<MediaQueryResponse>("/api/admin/media", {
+      params: request,
+    });
     return response.data;
   },
 
   getMediaFile: async (mediaId: string): Promise<Blob> => {
-    const response = await apiClient.get(`/api/admin/mediaadmin/${mediaId}`, {
+    const response = await apiClient.get(`/api/admin/media/${mediaId}`, {
       responseType: "blob",
     });
     return response.data;
   },
 
-  uploadMedia: async (
-    file: File,
-    metadata?: Record<string, unknown>
-  ): Promise<MediaAsset> => {
+  uploadMedia: async (file: File, metadata?: Record<string, unknown>): Promise<MediaAsset> => {
     const formData = new FormData();
     formData.append("file", file);
     if (metadata) {
       formData.append("metadata", JSON.stringify(metadata));
     }
 
-    const response = await apiClient.post<MediaAsset>(
-      "/api/admin/mediaadmin/upload",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await apiClient.post<MediaAsset>("/api/admin/media/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 
@@ -83,7 +73,7 @@ export const mediaApi = {
       message: string;
       processedFiles: number;
       errors: string[];
-    }>("/api/admin/mediaadmin/upload-zip", formData, {
+    }>("/api/admin/media/upload-zip", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -92,6 +82,6 @@ export const mediaApi = {
   },
 
   deleteMedia: async (mediaId: string): Promise<void> => {
-    await apiClient.delete(`/api/admin/mediaadmin/${mediaId}`);
+    await apiClient.delete(`/api/admin/media/${mediaId}`);
   },
 };

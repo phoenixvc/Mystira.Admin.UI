@@ -76,6 +76,7 @@ Mystira Admin UI is a modern single-page application (SPA) built with React, Typ
 - **Form Handling**: React Hook Form 7.53 + Zod 3.23
 - **Routing**: React Router DOM 6.28
 - **HTTP Client**: Axios 1.7
+- **Authentication**: MSAL (Microsoft Authentication Library) for Azure AD / Entra ID
 - **Validation**: Ajv 8.17 (JSON Schema validator)
 - **YAML Parsing**: js-yaml 4.1
 
@@ -115,7 +116,7 @@ Mystira Admin UI is a modern single-page application (SPA) built with React, Typ
 Before you begin, ensure you have the following installed:
 
 - **Node.js**: Version 18.x or higher ([Download](https://nodejs.org/))
-- **pnpm**: Version 8.x or higher ([Install](https://pnpm.io/installation))
+- **pnpm**: Version 9.x (specified in `package.json` as `packageManager`) ([Install](https://pnpm.io/installation))
 - **Git**: For version control ([Download](https://git-scm.com/))
 - **Mystira Admin API**: Backend service must be running
 
@@ -142,6 +143,12 @@ Create a `.env.local` file in the root directory:
 # API Configuration
 VITE_API_BASE_URL=http://localhost:5000
 
+# Azure AD / Entra ID Authentication (Required)
+VITE_AZURE_CLIENT_ID=your-client-id
+VITE_AZURE_TENANT_ID=your-tenant-id
+VITE_AZURE_REDIRECT_URI=http://localhost:7001
+VITE_AZURE_API_SCOPE=api://your-backend-app-id/access_as_user
+
 # Optional: Environment
 VITE_ENV=development
 ```
@@ -160,10 +167,27 @@ The application will be available at `http://localhost:7001`
 - [ ] pnpm installed
 - [ ] Repository cloned
 - [ ] Dependencies installed (`pnpm install`)
+- [ ] Azure AD app registration configured (see [Authentication Setup](#authentication-setup))
 - [ ] Environment variables configured (`.env.local`)
 - [ ] Admin API running on configured URL
 - [ ] Development server started (`pnpm dev`)
 - [ ] Browser opened to `http://localhost:7001`
+
+### Authentication Setup
+
+This application uses **Microsoft Entra ID (Azure AD)** for authentication via MSAL. To set up authentication:
+
+1. **Register an application** in Azure Portal > App Registrations
+2. **Configure the application**:
+   - Set the application type to **Single-Page Application (SPA)**
+   - Add redirect URI: `http://localhost:7001` (for development)
+   - Enable **ID tokens** and **Access tokens** in Authentication settings
+3. **Set up API permissions** for your backend API
+4. **Copy the values** to your `.env.local`:
+   - `VITE_AZURE_CLIENT_ID`: Application (client) ID
+   - `VITE_AZURE_TENANT_ID`: Directory (tenant) ID
+   - `VITE_AZURE_REDIRECT_URI`: Your redirect URI
+   - `VITE_AZURE_API_SCOPE`: Your backend API scope
 
 ## 💻 Development
 
@@ -279,13 +303,19 @@ mystira-admin-ui/
 ├── public/                      # Static assets
 ├── src/
 │   ├── api/                     # API client modules
-│   │   ├── auth.ts             # Authentication API
+│   │   ├── client.ts           # Axios client with MSAL token injection
 │   │   ├── scenarios.ts        # Scenarios API
 │   │   ├── media.ts            # Media API
 │   │   ├── badges.ts           # Badges API
 │   │   ├── bundles.ts          # Bundles API
 │   │   ├── avatars.ts          # Avatars API
 │   │   └── ...                 # Other API modules
+│   ├── auth/                    # MSAL Authentication
+│   │   ├── AuthProvider.tsx    # React context provider for MSAL
+│   │   ├── msalConfig.ts       # MSAL configuration
+│   │   ├── msalInstance.ts     # PublicClientApplication instance
+│   │   ├── useAuth.ts          # Custom hook for auth operations
+│   │   └── index.ts            # Barrel export
 │   ├── components/              # Reusable UI components
 │   │   ├── Alert.tsx           # Alert component
 │   │   ├── Card.tsx            # Card wrapper
@@ -347,6 +377,7 @@ mystira-admin-ui/
 ### Key Directories
 
 - **`src/api/`**: API client modules using Axios for HTTP requests
+- **`src/auth/`**: MSAL authentication (AuthProvider, useAuth hook, config)
 - **`src/components/`**: Reusable UI components (Alert, Card, FileInput, etc.)
 - **`src/hooks/`**: Custom React hooks for business logic
 - **`src/pages/`**: Page-level components for routing
@@ -364,6 +395,12 @@ Create a `.env.local` file for local development:
 # Required: API base URL
 VITE_API_BASE_URL=http://localhost:5000
 
+# Required: Azure AD / Entra ID Authentication
+VITE_AZURE_CLIENT_ID=your-client-id
+VITE_AZURE_TENANT_ID=your-tenant-id
+VITE_AZURE_REDIRECT_URI=http://localhost:7001
+VITE_AZURE_API_SCOPE=api://your-backend-app-id/access_as_user
+
 # Optional: Environment identifier
 VITE_ENV=development
 
@@ -376,6 +413,10 @@ VITE_DEBUG=true
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `VITE_API_BASE_URL` | Backend API URL | - | Yes |
+| `VITE_AZURE_CLIENT_ID` | Azure AD Application (client) ID | - | Yes |
+| `VITE_AZURE_TENANT_ID` | Azure AD Directory (tenant) ID | `common` | Yes |
+| `VITE_AZURE_REDIRECT_URI` | OAuth redirect URI | `window.location.origin` | No |
+| `VITE_AZURE_API_SCOPE` | API scope for backend access | `User.Read` | Yes |
 | `VITE_ENV` | Environment name | `development` | No |
 | `VITE_DEBUG` | Enable debug logs | `false` | No |
 

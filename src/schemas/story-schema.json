@@ -37,41 +37,22 @@
     "music_continuity": {
       "type": "string",
       "description": "How strongly this scene prefers to continue the current track vs switching to another track/profile.",
-      "enum": [
-        "prefer_continue",
-        "allow_change",
-        "force_change",
-        "force_silence"
-      ]
+      "enum": ["prefer_continue", "allow_change", "force_change", "force_silence"]
     },
     "music_transition_hint": {
       "type": "string",
       "description": "Hint for how to transition from the previous scene's music to this scene's music. 'auto' lets the engine decide based on scene type and mood change.",
-      "enum": [
-        "auto",
-        "keep",
-        "crossfade_short",
-        "crossfade_normal",
-        "crossfade_long",
-        "hard_cut"
-      ]
+      "enum": ["auto", "keep", "crossfade_short", "crossfade_normal", "crossfade_long", "hard_cut"]
     },
     "music_priority": {
       "type": "string",
       "description": "Whether this scene's music intent can be overridden by other logic (background) or should win over other hints (important).",
-      "enum": [
-        "background",
-        "important"
-      ]
+      "enum": ["background", "important"]
     },
     "music_ducking": {
       "type": "string",
       "description": "How the engine should reduce (duck) music volume when voice/narration or dialogue is present.",
-      "enum": [
-        "none",
-        "narration",
-        "dialogue"
-      ]
+      "enum": ["none", "narration", "dialogue"]
     },
     "track_id": {
       "type": "string",
@@ -253,21 +234,60 @@
             "minLength": 1,
             "description": "Character id (lowercase snake_case)."
           },
-          "name": { "type": "string", "minLength": 1, "description": "Character name shown to the player." },
-          "image": { "type": "string", "minLength": 1, "description": "Image id for the character (optional usage depending on client)." },
-          "audio": { "type": "string", "minLength": 1, "description": "Audio id for the character (optional usage depending on client)." },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Character name shown to the player."
+          },
+          "image": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Image id for the character (optional usage depending on client)."
+          },
+          "audio": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Audio id for the character (optional usage depending on client)."
+          },
           "metadata": {
             "type": "object",
             "additionalProperties": false,
             "required": ["role", "archetype", "species", "age", "traits", "backstory"],
             "description": "Metadata used to keep characters consistent in generation and presentation.",
             "properties": {
-              "role": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Character's role(s) in the story." },
-              "archetype": { "type": "array", "items": { "type": "string" }, "minItems": 0, "description": "Character archetype(s) (optional list)." },
-              "species": { "type": "string", "minLength": 1, "description": "Character species/type (e.g., fox, robot, wizard)." },
-              "age": { "type": "integer", "minimum": 1, "description": "Character age in years (approximate is fine)." },
-              "traits": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Short trait descriptors used to guide consistent behavior." },
-              "backstory": { "type": "string", "minLength": 1, "description": "Brief backstory used to guide character motivation and consistency." }
+              "role": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1,
+                "description": "Character's role(s) in the story."
+              },
+              "archetype": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 0,
+                "description": "Character archetype(s) (optional list)."
+              },
+              "species": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Character species/type (e.g., fox, robot, wizard)."
+              },
+              "age": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Character age in years (approximate is fine)."
+              },
+              "traits": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1,
+                "description": "Short trait descriptors used to guide consistent behavior."
+              },
+              "backstory": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Brief backstory used to guide character motivation and consistency."
+              }
             }
           }
         }
@@ -289,13 +309,21 @@
             "minLength": 1,
             "description": "Unique scene identifier (snake_case recommended; letters/numbers/_ allowed)."
           },
-          "title": { "type": "string", "minLength": 1, "description": "Scene title shown to the player/reader." },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Scene title shown to the player/reader."
+          },
           "type": {
             "type": "string",
             "enum": ["narrative", "choice", "roll", "special"],
             "description": "Scene type: narrative (linear), choice (branching), roll (branching with difficulty), special (ending or special handling)."
           },
-          "description": { "type": "string", "minLength": 1, "description": "Scene narrative text displayed to the player/reader." },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Scene narrative text displayed to the player/reader."
+          },
 
           "music": {
             "type": "object",
@@ -358,9 +386,18 @@
             "additionalProperties": false,
             "minProperties": 1,
             "properties": {
-              "image": { "type": "string", "description": "Image id or path associated with this scene." },
-              "audio": { "type": "string", "description": "Audio id or path associated with this scene." },
-              "video": { "type": "string", "description": "Video id or path associated with this scene." }
+              "image": {
+                "type": "string",
+                "description": "Image id or path associated with this scene."
+              },
+              "audio": {
+                "type": "string",
+                "description": "Audio id or path associated with this scene."
+              },
+              "video": {
+                "type": "string",
+                "description": "Video id or path associated with this scene."
+              }
             }
           },
 
@@ -372,7 +409,11 @@
               "additionalProperties": false,
               "required": ["choice", "next_scene"],
               "properties": {
-                "choice": { "type": "string", "minLength": 1, "description": "Branch choice text shown to the user (what they can choose to do)." },
+                "choice": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Branch choice text shown to the user (what they can choose to do)."
+                },
                 "next_scene": {
                   "type": "string",
                   "minLength": 1,
@@ -385,9 +426,22 @@
                   "description": "Echo recorded by taking this branch (used for pattern/behavior tracking).",
                   "required": ["echo_type", "description", "strength"],
                   "properties": {
-                    "echo_type": { "type": "string", "minLength": 1, "description": "The type/category of echo recorded." },
-                    "description": { "type": "string", "minLength": 1, "description": "Human-readable description of the echo." },
-                    "strength": { "type": "number", "minimum": -1.0, "maximum": 1.0, "description": "Strength of the echo (-1..1)." }
+                    "echo_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "The type/category of echo recorded."
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Human-readable description of the echo."
+                    },
+                    "strength": {
+                      "type": "number",
+                      "minimum": -1.0,
+                      "maximum": 1.0,
+                      "description": "Strength of the echo (-1..1)."
+                    }
                   }
                 },
                 "compass_change": {
@@ -396,9 +450,20 @@
                   "description": "Optional compass axis change caused by this branch (developmental impact).",
                   "required": ["axis", "delta"],
                   "properties": {
-                    "axis": { "type": "string", "minLength": 1, "description": "Axis name to adjust." },
-                    "delta": { "type": "number", "description": "Change applied to the axis (positive or negative)." },
-                    "developmental_link": { "type": "string", "minLength": 1, "description": "Reference/link into the developmental framework supporting this change." }
+                    "axis": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Axis name to adjust."
+                    },
+                    "delta": {
+                      "type": "number",
+                      "description": "Change applied to the axis (positive or negative)."
+                    },
+                    "developmental_link": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Reference/link into the developmental framework supporting this change."
+                    }
                   }
                 }
               }
@@ -413,26 +478,59 @@
               "additionalProperties": false,
               "required": ["echo_type", "min_strength", "trigger_scene_id"],
               "properties": {
-                "echo_type": { "type": "string", "minLength": 1, "description": "Type/category of echo to reveal." },
-                "min_strength": { "type": "number", "description": "Minimum strength required for the reveal to trigger." },
+                "echo_type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Type/category of echo to reveal."
+                },
+                "min_strength": {
+                  "type": "number",
+                  "description": "Minimum strength required for the reveal to trigger."
+                },
                 "trigger_scene_id": {
                   "type": "string",
                   "minLength": 1,
                   "pattern": "^[A-Za-z0-9_]+$",
                   "description": "Scene ID that triggers the reveal check."
                 },
-                "max_age_scenes": { "type": "integer", "minimum": 0, "description": "Optional maximum age (in scenes) after which this reveal should no longer trigger." },
-                "reveal_mechanic": { "type": "string", "minLength": 1, "description": "Mechanic used to reveal (e.g., 'memory_flashback', 'npc_comment')." },
-                "required": { "type": "boolean", "description": "If true, this reveal must trigger when conditions are met." }
+                "max_age_scenes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Optional maximum age (in scenes) after which this reveal should no longer trigger."
+                },
+                "reveal_mechanic": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Mechanic used to reveal (e.g., 'memory_flashback', 'npc_comment')."
+                },
+                "required": {
+                  "type": "boolean",
+                  "description": "If true, this reveal must trigger when conditions are met."
+                }
               }
             }
           }
         },
         "allOf": [
-          { "if": { "properties": { "type": { "const": "roll" } } }, "then": { "required": ["difficulty", "branches"] } },
-          { "if": { "properties": { "type": { "const": "choice" } } }, "then": { "required": ["branches"] } },
-          { "if": { "properties": { "type": { "const": "narrative" } } }, "then": { "required": ["next_scene"] } },
-          { "if": { "properties": { "type": { "const": "special" } } }, "then": { "required": ["next_scene"], "properties": { "next_scene": { "type": "null" } } } }
+          {
+            "if": { "properties": { "type": { "const": "roll" } } },
+            "then": { "required": ["difficulty", "branches"] }
+          },
+          {
+            "if": { "properties": { "type": { "const": "choice" } } },
+            "then": { "required": ["branches"] }
+          },
+          {
+            "if": { "properties": { "type": { "const": "narrative" } } },
+            "then": { "required": ["next_scene"] }
+          },
+          {
+            "if": { "properties": { "type": { "const": "special" } } },
+            "then": {
+              "required": ["next_scene"],
+              "properties": { "next_scene": { "type": "null" } }
+            }
+          }
         ]
       }
     }
@@ -440,11 +538,15 @@
   "allOf": [
     {
       "if": { "properties": { "minimum_age": { "const": 1 } } },
-      "then": { "properties": { "age_group": { "enum": ["1-2", "3-5", "6-9", "10-12", "13-18", "19-150"] } } }
+      "then": {
+        "properties": { "age_group": { "enum": ["1-2", "3-5", "6-9", "10-12", "13-18", "19-150"] } }
+      }
     },
     {
       "if": { "properties": { "minimum_age": { "const": 3 } } },
-      "then": { "properties": { "age_group": { "enum": ["3-5", "6-9", "10-12", "13-18", "19-150"] } } }
+      "then": {
+        "properties": { "age_group": { "enum": ["3-5", "6-9", "10-12", "13-18", "19-150"] } }
+      }
     },
     {
       "if": { "properties": { "minimum_age": { "const": 6 } } },

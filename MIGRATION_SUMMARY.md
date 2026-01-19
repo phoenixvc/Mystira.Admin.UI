@@ -80,10 +80,13 @@ All forms use:
 
 All pages are integrated with the Admin API endpoints:
 - `/api/admin/scenarios`
-- `/api/admin/mediaadmin`
+- `/api/admin/media`
 - `/api/admin/badges`
-- `/api/admin/bundlesadmin`
+- `/api/admin/bundles`
+- `/api/admin/avatars`
 - `/api/admin/charactermaps`
+- `/api/admin/accounts` (read-only)
+- `/api/admin/profiles` (read-only)
 - `/api/admin/agegroups`
 - `/api/admin/archetypes`
 - `/api/admin/compassaxes`
