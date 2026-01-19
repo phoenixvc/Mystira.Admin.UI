@@ -1,27 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { adminApi } from "../api/admin";
 import ErrorAlert from "../components/ErrorAlert";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-function DashboardPage() {
-  const [stats, setStats] = useState({
-    totalScenarios: 0,
-    totalMedia: 0,
-    totalBadges: 0,
-    totalBundles: 0,
-  });
+const defaultStats = {
+  totalScenarios: 0,
+  totalMedia: 0,
+  totalBadges: 0,
+  totalBundles: 0,
+};
 
+function DashboardPage() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: () => adminApi.getStats(),
   });
 
-  useEffect(() => {
-    if (data) {
-      setStats(data);
-    }
-  }, [data]);
+  const stats = data ?? defaultStats;
 
   const handleRefresh = () => {
     refetch();
