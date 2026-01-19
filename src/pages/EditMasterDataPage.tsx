@@ -148,7 +148,13 @@ function EditMasterDataPage() {
     }
   };
 
-  const validTypes: MasterDataType[] = ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"];
+  const validTypes: MasterDataType[] = [
+    "age-groups",
+    "archetypes",
+    "compass-axes",
+    "echo-types",
+    "fantasy-themes",
+  ];
   const isValidType = type && validTypes.includes(type);
   const api = getApi();
   const schema = getSchema();
@@ -174,7 +180,11 @@ function EditMasterDataPage() {
       if (!api || !id) throw new Error("Invalid API or ID");
       return api.get(id);
     },
-    enabled: !!id && !!api && !!type && ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type),
+    enabled:
+      !!id &&
+      !!api &&
+      !!type &&
+      ["age-groups", "archetypes", "compass-axes", "echo-types", "fantasy-themes"].includes(type),
   });
 
   const updateMutation = useMutation({

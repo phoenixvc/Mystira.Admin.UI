@@ -31,7 +31,7 @@ function ImportScenarioPage() {
   });
 
   const { uploading, uploadFile, confirmationProps } = useFileUpload({
-    onUpload: async (file) => {
+    onUpload: async file => {
       await uploadMutation.mutateAsync(file);
     },
     validationResult,

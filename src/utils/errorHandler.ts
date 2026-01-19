@@ -68,12 +68,10 @@ export function handleApiError(error: unknown, customMessage?: string): void {
   showToast.error(message);
 
   // Report to error reporting service
-  errorReportingService.reportApiError(
-    apiError.message,
-    apiError.status,
-    apiError.code,
-    { source: "handleApiError", extra: { details: apiError.details } }
-  );
+  errorReportingService.reportApiError(apiError.message, apiError.status, apiError.code, {
+    source: "handleApiError",
+    extra: { details: apiError.details },
+  });
 }
 
 /**

@@ -53,11 +53,12 @@ Message: ${errorInfo.message}
 ${errorInfo.stack ? `Stack Trace:\n${errorInfo.stack}` : "No stack trace available"}
     `.trim();
 
-    navigator.clipboard.writeText(errorText)
+    navigator.clipboard
+      .writeText(errorText)
       .then(() => {
         alert("Error details copied to clipboard");
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Failed to copy to clipboard:", err);
         // Fallback for non-secure contexts or clipboard access denied
         try {
@@ -92,9 +93,7 @@ ${errorInfo.stack ? `Stack Trace:\n${errorInfo.stack}` : "No stack trace availab
               <i className="bi bi-bug-fill text-danger" style={{ fontSize: "4rem" }}></i>
               <h1 className="display-4 fw-bold text-danger mt-3">{errorInfo.status}</h1>
               <h2 className="h3 mb-3">{errorInfo.statusText}</h2>
-              <p className="text-muted">
-                We encountered an error while processing your request.
-              </p>
+              <p className="text-muted">We encountered an error while processing your request.</p>
             </div>
 
             <Alert variant="danger" title="Error Message">
@@ -113,7 +112,10 @@ ${errorInfo.stack ? `Stack Trace:\n${errorInfo.stack}` : "No stack trace availab
 
                 {showDetails && (
                   <>
-                    <pre className="bg-light p-3 border rounded" style={{ fontSize: "0.85rem", maxHeight: "400px", overflow: "auto" }}>
+                    <pre
+                      className="bg-light p-3 border rounded"
+                      style={{ fontSize: "0.85rem", maxHeight: "400px", overflow: "auto" }}
+                    >
                       <code>{errorInfo.stack}</code>
                     </pre>
                     <button

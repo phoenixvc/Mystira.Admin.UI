@@ -31,7 +31,7 @@ apiClient.interceptors.request.use(
           ...tokenRequest,
           account,
         });
-        
+
         if (config.headers) {
           config.headers.Authorization = `Bearer ${response.accessToken}`;
         }

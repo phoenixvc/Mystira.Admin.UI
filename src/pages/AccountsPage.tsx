@@ -89,7 +89,9 @@ function AccountsPage() {
                         <td>{account.displayName || "-"}</td>
                         <td>
                           {account.isActive !== undefined ? (
-                            <span className={`badge ${account.isActive ? "bg-success" : "bg-danger"}`}>
+                            <span
+                              className={`badge ${account.isActive ? "bg-success" : "bg-danger"}`}
+                            >
                               {account.isActive ? "Active" : "Inactive"}
                             </span>
                           ) : (

@@ -25,9 +25,7 @@ function ValidateScenariosPage() {
       }
     },
     onError: error => {
-      showToast.error(
-        error instanceof Error ? error.message : "Failed to validate scenarios"
-      );
+      showToast.error(error instanceof Error ? error.message : "Failed to validate scenarios");
       setIsValidating(false);
     },
   });
@@ -93,11 +91,7 @@ function ValidateScenariosPage() {
             </div>
           </div>
 
-          <button
-            className="btn btn-primary"
-            onClick={handleValidate}
-            disabled={isValidating}
-          >
+          <button className="btn btn-primary" onClick={handleValidate} disabled={isValidating}>
             {isValidating ? (
               <>
                 <span

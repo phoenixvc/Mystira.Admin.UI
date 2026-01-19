@@ -139,11 +139,7 @@ class ErrorReportingService {
   /**
    * Report an error from an Error object
    */
-  reportError(
-    error: Error,
-    severity: ErrorSeverity = "error",
-    context?: ErrorContext
-  ): void {
+  reportError(error: Error, severity: ErrorSeverity = "error", context?: ErrorContext): void {
     const report = this.createReport(error.message, severity, context);
     report.stack = error.stack;
     this.reporter.report(report);
@@ -152,12 +148,7 @@ class ErrorReportingService {
   /**
    * Report an API error with status code
    */
-  reportApiError(
-    message: string,
-    status?: number,
-    code?: string,
-    context?: ErrorContext
-  ): void {
+  reportApiError(message: string, status?: number, code?: string, context?: ErrorContext): void {
     const severity: ErrorSeverity = status && status >= 500 ? "error" : "warning";
     const report = this.createReport(message, severity, context);
     report.status = status;
@@ -168,11 +159,7 @@ class ErrorReportingService {
   /**
    * Report a React ErrorBoundary error
    */
-  reportBoundaryError(
-    error: Error,
-    errorInfo: ErrorInfo | null,
-    context?: ErrorContext
-  ): void {
+  reportBoundaryError(error: Error, errorInfo: ErrorInfo | null, context?: ErrorContext): void {
     const report = this.createReport(error.message, "fatal", context);
     report.stack = error.stack;
     report.componentStack = errorInfo?.componentStack ?? undefined;

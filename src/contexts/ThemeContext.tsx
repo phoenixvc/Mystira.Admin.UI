@@ -1,18 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = "light" | "dark" | "system";
 
 interface ThemeContextValue {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  resolvedTheme: 'light' | 'dark';
+  resolvedTheme: "light" | "dark";
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: 'system',
+  theme: "system",
   setTheme: () => {},
-  resolvedTheme: 'light',
+  resolvedTheme: "light",
 });
 
 interface ThemeProviderProps {
@@ -23,39 +23,38 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
-  storageKey = 'admin-theme',
+  defaultTheme = "system",
+  storageKey = "admin-theme",
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem(storageKey) as Theme | null;
     return stored || defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const applyTheme = () => {
-      const isDark =
-        theme === 'dark' || (theme === 'system' && mediaQuery.matches);
+      const isDark = theme === "dark" || (theme === "system" && mediaQuery.matches);
 
-      root.classList.toggle('dark', isDark);
-      root.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-      setResolvedTheme(isDark ? 'dark' : 'light');
+      root.classList.toggle("dark", isDark);
+      root.setAttribute("data-bs-theme", isDark ? "dark" : "light");
+      setResolvedTheme(isDark ? "dark" : "light");
     };
 
     applyTheme();
 
     const handleChange = () => {
-      if (theme === 'system') {
+      if (theme === "system") {
         applyTheme();
       }
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
@@ -73,7 +72,7 @@ export function ThemeProvider({
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
