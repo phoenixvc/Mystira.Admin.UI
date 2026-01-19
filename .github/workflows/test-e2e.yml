@@ -1,15 +1,20 @@
 name: "[Test] E2E"
 
+# NOTE: This workflow requires @playwright/test to be installed.
+# To enable: pnpm add -D @playwright/test && pnpm exec playwright install
+# Then uncomment the push/pull_request triggers below.
+
 on:
-  push:
-    branches: [dev, main]
-    paths:
-      - "src/**"
-      - "e2e/**"
-      - "playwright.config.*"
-      - ".github/workflows/test-e2e.yml"
-  pull_request:
-    branches: [dev, main]
+  # Disabled until Playwright is set up in the project
+  # push:
+  #   branches: [dev, main]
+  #   paths:
+  #     - "src/**"
+  #     - "e2e/**"
+  #     - "playwright.config.*"
+  #     - ".github/workflows/test-e2e.yml"
+  # pull_request:
+  #   branches: [dev, main]
   workflow_dispatch:
 
 concurrency:
